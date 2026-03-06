@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _roundNumber = 1;
   List<Map<String, dynamic>> _debateHistory = [];
 
-  static const String _apiKey = geminiApiKey;
+  static const String _apiKey = 'AIzaSyB33bvoRkMyH-PnBP6dI0c8KPaPToQfV4w';
   late final GenerativeModel _opponentModel;
   late final GenerativeModel _judgeModel;
 
