@@ -6,7 +6,7 @@ import 'dart:html' as html; // For web downloads
 import 'dart:async';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:convert';
-import 'config.dart';
+import 'package:http/http.dart' as http;
 
 enum SubjectMode { search, custom }
 
@@ -138,9 +138,17 @@ class _MyHomePageState extends State<MyHomePage> {
   int _roundNumber = 1;
   List<Map<String, dynamic>> _debateHistory = [];
 
-  static const String _apiKey = 'AIzaSyB33bvoRkMyH-PnBP6dI0c8KPaPToQfV4w';
-  late final GenerativeModel _opponentModel;
-  late final GenerativeModel _judgeModel;
+  static const String _backendUrl = 'https://debate-backend-j5z2.onrender.com';
+
+  Future<String> _callGemini(String prompt) async {
+    final response = await http.post(
+      Uri.parse('$_backendUrl/api/generate'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'prompt': prompt}),
+    );
+    final data = jsonDecode(response.body);
+    return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+  }
 
   final Map<String, List<String>> _allTopics = {
     'Education': [
@@ -295,13 +303,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     // The Opponent: High creativity, latest reasoning for debate flow
-    _opponentModel = GenerativeModel(
-      model: 'gemini-2.5-flash',
-      apiKey: _apiKey,
-    );
+    // _opponentModel = GenerativeModel(
+    //   model: 'gemini-2.5-flash',
+    //   apiKey: _apiKey,
+    // );
 
-    // The Judge: Fast, analytical, stable for extraction
-    _judgeModel = GenerativeModel(model: 'gemini-2.5-flash', apiKey: _apiKey);
+    // // The Judge: Fast, analytical, stable for extraction
+    // _judgeModel = GenerativeModel(model: 'gemini-2.5-flash', apiKey: _apiKey);
 
     _filteredTopics = _allTopics;
     _searchFocusNode = FocusNode();
@@ -352,11 +360,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Write following on the end and oppCertainty should be to first decimal : my current state is $_selectedTopic + $_oppSide + $_persona + $_oppCertainty + $_isCustomMode
   """;
     try {
-      final content = [Content.text(prompt)];
-      final response = await _opponentModel.generateContent(content);
+      // final content = [Content.text(prompt)];
+      // final response = await _opponentModel.generateContent(content);
+      final text = await _callGemini(prompt);
 
       setState(() {
-        _aiConstructiveText = response.text ?? "No response generated.";
+        // _aiConstructiveText = response.text ?? "No response generated.";
+        _aiConstructiveText = text;
         _isAiGenerating = false;
       });
     } catch (e) {
@@ -578,10 +588,12 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      final content = [Content.text(prompt)];
-      final response = await _opponentModel.generateContent(content);
+      // final content = [Content.text(prompt)];
+      // final response = await _opponentModel.generateContent(content);
+      final text = await _callGemini(prompt);
       setState(() {
-        _aiRebuttalText = response.text ?? "No rebuttal generated.";
+        // _aiRebuttalText = response.text ?? "No rebuttal generated.";
+        _aiRebuttalText = text;
         _isAiRebuttalGenerating = false;
       });
     } catch (e) {
@@ -652,10 +664,12 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      final content = [Content.text(prompt)];
-      final response = await _opponentModel.generateContent(content);
+      // final content = [Content.text(prompt)];
+      // final response = await _opponentModel.generateContent(content);
+      final text = await _callGemini(prompt);
       setState(() {
-        _aiSummaryText = response.text ?? "No summary generated.";
+        // _aiSummaryText = response.text ?? "No summary generated.";
+        _aiSummaryText = text;
         _isAiSummaryGenerating = false;
       });
     } catch (e) {
@@ -733,10 +747,12 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      final content = [Content.text(prompt)];
-      final response = await _opponentModel.generateContent(content);
+      // final content = [Content.text(prompt)];
+      // final response = await _opponentModel.generateContent(content);
+      final text = await _callGemini(prompt);
       setState(() {
-        _aiFinalFocusText = response.text ?? "No final focus generated.";
+        // _aiFinalFocusText = response.text ?? "No final focus generated.";
+        _aiFinalFocusText = text;
         _isAiFinalFocusGenerating = false;
       });
     } catch (e) {
@@ -783,12 +799,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final chatPrompt =
         "$phaseContext Debate Topic: $_selectedTopic. Respond to this argument in 2 sentences as a $_persona: $text";
     try {
-      final response = await _opponentModel.generateContent([
-        Content.text(chatPrompt),
-      ]);
+      // final response = await _opponentModel.generateContent([
+      //   Content.text(chatPrompt),
+      // ]);
+      final text = await _callGemini(chatPrompt);
       setState(() {
         targetList.add(
-          ChatMessage(text: response.text ?? "...", isUser: false),
+          // ChatMessage(text: response.text ?? "...", isUser: false),
+          ChatMessage(text: text, isUser: false)
         );
         _isChatAiGenerating = false;
       });
@@ -1471,11 +1489,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final prompt = _generateJudgePrompt();
   try {
-    final response = await _judgeModel.generateContent([
-      Content.text(prompt),
-    ]);
+    // final response = await _judgeModel.generateContent([
+    //   Content.text(prompt),
+    // ]);
 
-    String raw = response.text ?? "";
+    // String raw = response.text ?? "";
+    String raw = await _callGemini(prompt);
 
     // Strip markdown fences
     raw = raw.replaceAll(RegExp(r'```json|```'), '').trim();
