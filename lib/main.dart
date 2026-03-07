@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:screenshot/screenshot.dart';
-import 'dart:html' as html; // For web downloads
+import 'dart:html' as html;
 import 'dart:async';
-// import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -45,12 +44,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color.fromARGB(
-          255,
-          255,
-          255,
-          255,
-        ), // Whole webpage background white
+        scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: ''),
@@ -67,7 +61,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // State variables for sliders and selections
   final ScrollController _categoryScrollController = ScrollController();
   final ScreenshotController _screenshotController = ScreenshotController();
   double _oppCertainty = 20;
@@ -83,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool _isDebateStarted = false;
   bool _isAiGenerating = false;
-  String _aiConstructiveText = ""; // IMPORTANT: Initialize as empty string
+  String _aiConstructiveText = "";
   String _subjectIntroduction = "Select or write a subject to start";
   final TextEditingController _userConstructiveController =
       TextEditingController();
@@ -141,16 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Map<String, dynamic>> _debateHistory = [];
 
   static const String _backendUrl = 'https://debate-backend-j5z2.onrender.com';
-
-  // Future<String> _callGemini(String prompt) async {
-  //   final response = await http.post(
-  //     Uri.parse('$_backendUrl/api/generate'),
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: jsonEncode({'prompt': prompt}),
-  //   );
-  //   final data = jsonDecode(response.body);
-  //   return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
-  // }
 
   Future<String> _callGemini(String prompt) async {
     try {
@@ -320,14 +303,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // The Opponent: High creativity, latest reasoning for debate flow
-    // _opponentModel = GenerativeModel(
-    //   model: 'gemini-2.5-flash',
-    //   apiKey: _apiKey,
-    // );
-
-    // // The Judge: Fast, analytical, stable for extraction
-    // _judgeModel = GenerativeModel(model: 'gemini-2.5-flash', apiKey: _apiKey);
 
     _filteredTopics = _allTopics;
     _searchFocusNode = FocusNode();
@@ -353,7 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
   //✅ Constructive Box Functions
   void _updateLetterCount(String text) {
     setState(() {
-      _userLetterCount = text.length; // Direct character count
+      _userLetterCount = text.length;
     });
   }
 
@@ -381,12 +356,9 @@ class _MyHomePageState extends State<MyHomePage> {
     Write following on the end and oppCertainty should be to first decimal : my current state is $_selectedTopic + $_oppSide + $_persona + $_oppCertainty + $_isCustomMode
   """;
     try {
-      // final content = [Content.text(prompt)];
-      // final response = await _opponentModel.generateContent(content);
       final text = await _callGemini(prompt);
 
       setState(() {
-        // _aiConstructiveText = response.text ?? "No response generated.";
         _aiConstructiveText = text;
         _isAiGenerating = false;
       });
@@ -435,11 +407,9 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           const SizedBox(height: 8),
-          // Content Area using Stack to keep button inside
           Expanded(
             child: Stack(
               children: [
-                // Inside _buildConstructiveBox, the Stack's first child:
                 Positioned.fill(
                   child:
                       isLoading
@@ -467,7 +437,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                 ),
 
-                // The Save Button positioned inside the bottom-right
                 if (isUser && !isReadOnly && onSave != null)
                   Positioned(
                     bottom: 0,
@@ -475,7 +444,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
-                        // Turns red if clicked while AI is loading, otherwise stays neutral
                         color:
                             _isSaveButtonError
                                 ? Colors.redAccent
@@ -499,7 +467,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               _isAiFinalFocusGenerating;
 
                           if (isAiStillWorking) {
-                            // Trigger the Red Flash
                             setState(() => _isSaveButtonError = true);
                             Future.delayed(
                               const Duration(milliseconds: 500),
@@ -508,10 +475,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   setState(() => _isSaveButtonError = false);
                               },
                             );
-                            return; // Exit without saving
+                            return;
                           }
 
-                          // Standard Save Logic
                           if (charCount > 0 && charCount <= _charLimit) {
                             onSave();
                           }
@@ -609,11 +575,8 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      // final content = [Content.text(prompt)];
-      // final response = await _opponentModel.generateContent(content);
       final text = await _callGemini(prompt);
       setState(() {
-        // _aiRebuttalText = response.text ?? "No rebuttal generated.";
         _aiRebuttalText = text;
         _isAiRebuttalGenerating = false;
       });
@@ -685,11 +648,8 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      // final content = [Content.text(prompt)];
-      // final response = await _opponentModel.generateContent(content);
       final text = await _callGemini(prompt);
       setState(() {
-        // _aiSummaryText = response.text ?? "No summary generated.";
         _aiSummaryText = text;
         _isAiSummaryGenerating = false;
       });
@@ -768,11 +728,8 @@ class _MyHomePageState extends State<MyHomePage> {
   """;
 
     try {
-      // final content = [Content.text(prompt)];
-      // final response = await _opponentModel.generateContent(content);
       final text = await _callGemini(prompt);
       setState(() {
-        // _aiFinalFocusText = response.text ?? "No final focus generated.";
         _aiFinalFocusText = text;
         _isAiFinalFocusGenerating = false;
       });
@@ -820,20 +777,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final chatPrompt =
         "$phaseContext Debate Topic: $_selectedTopic. Respond to this argument in 2 sentences as a $_persona: $text";
     try {
-      // final response = await _opponentModel.generateContent([
-      //   Content.text(chatPrompt),
-      // ]);
       final text = await _callGemini(chatPrompt);
       setState(() {
-        targetList.add(
-          // ChatMessage(text: response.text ?? "...", isUser: false),
-          ChatMessage(text: text, isUser: false),
-        );
+        targetList.add(ChatMessage(text: text, isUser: false));
         _isChatAiGenerating = false;
       });
       _scrollToBottom();
     } catch (e) {
-      setState(() => _isChatAiGenerating = false); // Ensure unlock on error
+      setState(() => _isChatAiGenerating = false);
       debugPrint(e.toString());
     }
   }
@@ -926,7 +877,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Format the seconds into MM:SS
   String _formatTime(int seconds) {
     int mins = seconds ~/ 60;
     int secs = seconds % 60;
@@ -960,7 +910,6 @@ class _MyHomePageState extends State<MyHomePage> {
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // AI Side (Opponent)
           Expanded(
             child: _buildBox(
               title: "Constructive",
@@ -972,7 +921,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           const SizedBox(width: 20),
-          // User Side
           Expanded(
             child: _buildBox(
               title: "Constructive",
@@ -985,7 +933,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 maxLength: _charLimit,
                 scrollPhysics: const BouncingScrollPhysics(),
                 keyboardType: TextInputType.multiline,
-                style: const TextStyle(fontSize: 12), // Text size 12
+                style: const TextStyle(fontSize: 12),
                 onChanged: (text) {
                   setState(() {
                     _userLetterCount = text.length;
@@ -1045,7 +993,6 @@ class _MyHomePageState extends State<MyHomePage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // AI Rebuttal Box
             Expanded(
               child: _buildBox(
                 title: "Rebuttal",
@@ -1057,7 +1004,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(width: 20),
-            // User Rebuttal Box
             Expanded(
               child: _buildBox(
                 title: "Rebuttal",
@@ -1086,12 +1032,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         if (_isCrossfireStarted2) ...[
           const SizedBox(height: 30),
-          _buildCrossfireBar(), // Shows the reset 3:00 timer
+          _buildCrossfireBar(),
           const SizedBox(height: 20),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: _crossfireMessages2.length, // Uses the 2nd list
+            itemCount: _crossfireMessages2.length,
             itemBuilder:
                 (context, index) =>
                     _buildChatBubble(_crossfireMessages2[index]),
@@ -1103,12 +1049,7 @@ class _MyHomePageState extends State<MyHomePage> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(
-                255,
-                191,
-                217,
-                255,
-              ), // Light Green for Summary
+              color: const Color.fromARGB(255, 191, 217, 255),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -1128,7 +1069,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AI Summary Box
               Expanded(
                 child: _buildBox(
                   title: "Summary",
@@ -1140,7 +1080,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(width: 20),
-              // User Summary Box
               Expanded(
                 child: _buildBox(
                   title: "Summary",
@@ -1181,7 +1120,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       _buildChatBubble(_crossfireMessages3[index]),
             ),
           ],
-          // --- FINAL FOCUS ROUND (The Absolute End) ---
           if (_isFinalFocusStarted) ...[
             const SizedBox(height: 40),
             Container(
@@ -1206,7 +1144,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // AI Final Focus Box
                 Expanded(
                   child: _buildBox(
                     title: "Final Focus",
@@ -1218,7 +1155,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 const SizedBox(width: 20),
-                // User Final Focus Box
                 Expanded(
                   child: _buildBox(
                     title: "Final Focus",
@@ -1306,7 +1242,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showGuidePopup(BuildContext context) {
-    // Controller to handle the sliding logic
     final PageController pageController = PageController();
 
     showGeneralDialog(
@@ -1324,7 +1259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    width: 700, // Slightly wider to accommodate side arrows
+                    width: 700,
                     height: 500,
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -1339,7 +1274,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: Stack(
                       children: [
-                        // 1. MAIN CONTENT (PageView)
                         Padding(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 40,
@@ -1375,7 +1309,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
 
-                        // 2. LEFT ARROW
                         Align(
                           alignment: Alignment.centerLeft,
                           child: IconButton(
@@ -1393,7 +1326,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
 
-                        // 3. RIGHT ARROW
                         Align(
                           alignment: Alignment.centerRight,
                           child: IconButton(
@@ -1411,7 +1343,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
 
-                        // 4. CLOSE BUTTON (x)
                         Positioned(
                           top: 8,
                           right: 8,
@@ -1548,20 +1479,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final prompt = _generateJudgePrompt();
     try {
-      // final response = await _judgeModel.generateContent([
-      //   Content.text(prompt),
-      // ]);
-
-      // String raw = response.text ?? "";
       String raw = await _callGemini(prompt);
 
-      // Strip markdown fences
       raw = raw.replaceAll(RegExp(r'```json|```'), '').trim();
 
-      // Strip bad control characters
       raw = raw.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]'), '');
 
-      // If model added preamble, extract just the JSON object
       final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(raw);
       if (jsonMatch == null)
         throw FormatException('No JSON object found in response');
@@ -1641,7 +1564,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
 
-        // Winner Announcement
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
@@ -1670,7 +1592,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Renders a fully completed round from _debateHistory (read-only)
   Widget _buildArchivedRound(Map<String, dynamic> data) {
     final int roundNum = data['round'] as int;
     final String topic = data['topic'] as String;
@@ -1783,7 +1704,6 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Round header
           Row(
             children: [
               Text(
@@ -1821,7 +1741,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           const Divider(height: 24),
 
-          // Constructive
           _buildArchivedSectionLabel(
             "Constructive Round",
             const Color.fromARGB(255, 191, 217, 255),
@@ -1846,7 +1765,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           archivedCrossfire(cf1, "Crossfire 1"),
 
-          // Rebuttal
           const SizedBox(height: 16),
           _buildArchivedSectionLabel(
             "Rebuttal Round",
@@ -1872,7 +1790,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           archivedCrossfire(cf2, "Crossfire 2"),
 
-          // Summary
           const SizedBox(height: 16),
           _buildArchivedSectionLabel(
             "Summary Round",
@@ -1896,7 +1813,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           archivedCrossfire(cf3, "Crossfire 3"),
 
-          // Final Focus
           const SizedBox(height: 16),
           _buildArchivedSectionLabel(
             "Final Focus",
@@ -1921,7 +1837,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
 
-          // Judge result
           if (judgeResult != null) ...[
             const Divider(height: 32),
             Center(
@@ -2015,36 +1930,21 @@ class _MyHomePageState extends State<MyHomePage> {
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200)
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   "After this debate, how certain are you about your position?",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Not certain',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 10, color: Colors.black54)),
-                    Text('Completely certain',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 10, color: Colors.black54)),
-                  ],
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 4),
                 _buildGradientSlider(
                   _userFinalCertainty ?? 0,
                   (val) => setState(() {
                     _userFinalCertainty = val;
-                  _isCertaintyAnswered =true;
+                    _isCertaintyAnswered = true;
                   }),
                 ),
                 if (!_isCertaintyAnswered) ...[
@@ -2057,8 +1957,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         fontStyle: FontStyle.italic,
                       ),
                     ),
-                  )
-                ]
+                  ),
+                ],
               ],
             ),
           ),
@@ -2066,7 +1966,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // ── FINISH DEBATE ───────────────────────────────
               SizedBox(
                 height: 50,
                 child: ElevatedButton.icon(
@@ -2125,7 +2024,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
 
-              // ── START ANOTHER ROUND ─────────────────────────
               SizedBox(
                 height: 50,
                 child: ElevatedButton.icon(
@@ -2159,13 +2057,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _startNewRound() {
-    // 1. Archive the completed round before resetting state
     _archiveCurrentRound();
 
     setState(() {
       _roundNumber++;
 
-      // 2. Reset all round-phase flags
       _isAiGenerating = false;
       _aiConstructiveText = "";
       _userLetterCount = 0;
@@ -2205,20 +2101,16 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCertaintyAnswered = false;
       _userFinalCertainty = null;
 
-      // 3. Clear all text controllers
       _userConstructiveController.clear();
       _userRebuttalController.clear();
       _userSummaryController.clear();
       _userFinalFocusController.clear();
     });
 
-    // Cancel any running timer
     _crossfireTimer?.cancel();
 
-    // Start new round's AI constructive immediately
     _onStartDebate();
 
-    // Scroll so user sees the new round appear below the buttons
     Future.delayed(const Duration(milliseconds: 150), _scrollToBottom);
   }
 
@@ -2256,11 +2148,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _finishDebate() async {
-    // 1. Archive the final round
     _archiveCurrentRound();
 
-    // 2. Save full history as JSON (web download)
-    final String fullData = jsonEncode(_debateHistory);
+    if (_isKakaoTalkBrowser()) {
+      _showOpenInBrowserDialog();
+      return;
+    }
+
+    final exportData = {
+      "settings": {
+        "topic": _selectedTopic,
+        "oppSide": _oppSide,
+        "persona": _persona,
+        "oppCertainty": _oppCertainty,
+        "userInitialCertainty": _userInitialCertainty,
+        "userResearchCertainty": _userResearchCertainty,
+      },
+      "rounds": _debateHistory,
+    };
+
+    final String fullData = jsonEncode(exportData);
     final blob = html.Blob([fullData], 'application/json');
     final url = html.Url.createObjectUrlFromBlob(blob);
     html.AnchorElement(href: url)
@@ -2271,7 +2178,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ..click();
     html.Url.revokeObjectUrl(url);
 
-    // 3. Show confirmation, then full reset
     showDialog(
       context: context,
       builder:
@@ -2293,15 +2199,37 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  bool _isKakaoTalkBrowser() {
+    final userAgent = html.window.navigator.userAgent.toLowerCase();
+    return userAgent.contains('kakaotalk');
+  }
+
+  void _showOpenInBrowserDialog() {
+    showDialog(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Open in Browser"),
+            content: const Text(
+              "Downloads are not supported in KakaoTalk's browser.\n\nPlease tap the menu (⋮) and select 'Open in Browser' to download your files.",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+    );
+  }
+
   void _resetEverything() {
     _crossfireTimer?.cancel();
 
     setState(() {
-      // ── Round & history ──────────────────────────────
       _roundNumber = 1;
       _debateHistory.clear();
 
-      // ── Debate phase flags ───────────────────────────
       _isDebateStarted = false;
       _isAiGenerating = false;
       _aiConstructiveText = "";
@@ -2343,7 +2271,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCertaintyAnswered = false;
       _userFinalCertainty = null;
 
-      // ── Settings (drawer) reset to defaults ──────────
       _oppCertainty = 20;
       _userInitialCertainty = 15;
       _userResearchCertainty = 15;
@@ -2354,7 +2281,6 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCustomMode = false;
       _isSaveButtonError = false;
 
-      // ── Text controllers ─────────────────────────────
       _userConstructiveController.clear();
       _userRebuttalController.clear();
       _userSummaryController.clear();
@@ -2410,7 +2336,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-        // --- CUSTOM STYLED DRAWER ---
         drawer: _isDebateStarted ? null : _buildDrawer(sortedCategories),
         body: Column(
           children: [
@@ -2461,9 +2386,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       )
                     else ...[
-                      // Render all completed rounds from history (read-only)
                       ..._debateHistory.map(_buildArchivedRound),
-                      // Render the current live round
                       ..._buildDebateRound(),
                     ],
                   ],
@@ -2480,6 +2403,10 @@ class _MyHomePageState extends State<MyHomePage> {
   //✅ Drawer Functions
   Future<void> _captureWebScreenshot() async {
     final Uint8List? imageBytes = await _screenshotController.capture();
+    if (_isKakaoTalkBrowser()) {
+      _showOpenInBrowserDialog();
+      return;
+    }
     if (imageBytes != null) {
       final blob = html.Blob([imageBytes]);
       final url = html.Url.createObjectUrlFromBlob(blob);
@@ -2499,7 +2426,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Drawer(
       width: 420,
-      backgroundColor: const Color(0xFFF5F5F5), // Light grey background
+      backgroundColor: const Color(0xFFF5F5F5),
       child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
@@ -2508,7 +2435,6 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               _buildSectionHeader('Topic'),
 
-              // --- OPTION 1: SEARCH BY CATEGORY ---
               Row(
                 children: [
                   Expanded(
@@ -2539,11 +2465,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
 
-              // SHOW TOPICS ONLY IF SEARCH MODE IS ACTIVE
               if (!_isCustomMode)
                 Container(
                   height: 250,
-                  // Margin right matches the radio button width to keep alignment clean
                   margin: const EdgeInsets.only(top: 10, right: 48),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -2621,7 +2545,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                               _selectedTopic = topic;
                                               _searchController.text = topic;
                                             });
-                                            // _generateIntroduction(topic);
                                           },
                                         );
                                       }).toList(),
@@ -2637,18 +2560,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
               const SizedBox(height: 20),
 
-              // --- OPTION 2: WRITE OWN SUBJECT ---
               Row(
                 children: [
                   Expanded(
                     child: TextField(
-                      enabled:
-                          _isCustomMode, // Changed to match your single bool logic
+                      enabled: _isCustomMode,
                       controller: _customSubjectController,
                       onSubmitted: (value) {
                         if (value.trim().isNotEmpty) {
                           setState(() => _selectedTopic = value);
-                          // _generateIntroduction(value);
                         }
                       },
                       decoration: InputDecoration(
@@ -2680,10 +2600,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
               Row(
                 children: [
-                  // 1. The Header (Expanded to push toggles to the right)
                   Expanded(child: _buildSectionHeader('Opponent settings')),
 
-                  // 2. The Pros toggle
                   InkWell(
                     onTap: () => setState(() => _oppSide = 'pros'),
                     child: Row(
@@ -2700,10 +2618,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
 
-                  const SizedBox(
-                    width: 12,
-                  ), // Small gap between the two options
-                  // 3. The Cons toggle
+                  const SizedBox(width: 12),
                   InkWell(
                     onTap: () => setState(() => _oppSide = 'cons'),
                     child: Row(
@@ -2731,27 +2646,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     ) {
                       bool isSelected = _persona == p;
                       return ChoiceChip(
-                        // --- REMOVE CHECKMARK ---
                         showCheckmark: false,
 
                         label: Text(p),
                         labelStyle: TextStyle(
                           fontSize: 12,
-                          // --- SEMI-BOLD TEXT ---
                           fontWeight:
                               isSelected ? FontWeight.w600 : FontWeight.normal,
                           color: Colors.black,
                         ),
 
-                        // --- SELECTION LOGIC ---
                         selected: isSelected,
                         onSelected: (selected) => setState(() => _persona = p),
 
-                        // --- COLOR STYLING ---
-                        backgroundColor: Colors.white, // Default state
-                        selectedColor:
-                            Colors.grey.shade300, // Selected state (turn grey)
-                        // Optional: clean up border to match your UI
+                        backgroundColor: Colors.white,
+                        selectedColor: Colors.grey.shade300,
                         side: BorderSide(
                           color:
                               isSelected
@@ -2833,23 +2742,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             border: Border.all(color: Colors.grey.shade300),
                           ),
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .end, // Aligns counter to the right
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               TextField(
                                 controller: _otherController,
                                 maxLength: 200,
-                                maxLines:
-                                    5, // Set this to the height you want (e.g., 5 or 6 lines)
+                                maxLines: 5,
                                 style: const TextStyle(fontSize: 13),
                                 decoration: const InputDecoration(
                                   hintText: 'Please specify...',
-                                  isDense: true, // Reduces internal padding
+                                  isDense: true,
                                   contentPadding: EdgeInsets.zero,
                                   border: InputBorder.none,
-                                  counterText:
-                                      "", // Hides the default spacing/counter
+                                  counterText: "",
                                 ),
                                 onChanged: (v) => setState(() {}),
                               ),
@@ -2868,16 +2773,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               }).toList(),
 
-              const SizedBox(height: 10), // Spacing after the last checkbox
-              // --- THE GENERATE BUTTON ---
+              const SizedBox(height: 10),
 
-              // Check if the topic is empty based on the current mode
               SizedBox(
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    // TURN RED IF EMPTY:
                     backgroundColor:
                         isTopicEmpty ? Colors.redAccent : Colors.blue.shade700,
                     foregroundColor: Colors.white,
@@ -2900,12 +2802,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       _generateIntroduction(finalTopic);
                       _onStartDebate();
                     } else {
-                      // Trigger a rebuild to show the red state
                       setState(() {});
                     }
                   },
                   child: Text(
-                    // CHANGE TEXT IF EMPTY:
                     isTopicEmpty ? 'Choose Topic' : 'Start Debate',
                     style: const TextStyle(
                       fontSize: 16,
@@ -2921,7 +2821,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Helper to build headers
   Widget _buildSectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
@@ -2932,7 +2831,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // Helper for slider labels
   Widget _buildSliderLabel(String label, double value) {
     return Text(
       label,
@@ -2940,7 +2838,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  // UPDATE YOUR BUILD METHOD
   Widget _buildGradientSlider(double value, ValueChanged<double> onChanged) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -2951,7 +2848,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
         double availableWidth =
             constraints.maxWidth - leftLabelWidth - rightLabelWidth - (gap * 2);
-        // Center the label (40 width) under the thumb center
         double labelOffset = (availableWidth * percent) - 20;
 
         return Column(
@@ -2967,7 +2863,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      // THE GRADIENT TRACK BACKGROUND
                       Container(
                         height: 14,
                         decoration: BoxDecoration(
@@ -2983,11 +2878,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
-                      // THE INVISIBLE SLIDER (FOR THE THUMB)
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
                           trackHeight: 14,
-                          // FORCE TRACK TO EDGES
                           trackShape: FullWidthTrackShape(),
                           activeTrackColor: Colors.transparent,
                           inactiveTrackColor: Colors.transparent,
@@ -3005,9 +2898,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           onChanged: onChanged,
                         ),
                       ),
-                      // THE FLOATING NUMBER
                       Positioned(
-                        bottom: -25, // Pushed further down for clarity
+                        bottom: -25,
                         left: labelOffset,
                         child: SizedBox(
                           width: 40,
@@ -3015,7 +2907,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             value.toInt().toString(),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              fontSize: 13, // Slightly larger for readability
+                              fontSize: 13,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -3031,7 +2923,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            const SizedBox(height: 25), // Buffer for the floating number
+            const SizedBox(height: 25),
           ],
         );
       },
