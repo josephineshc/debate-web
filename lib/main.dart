@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:screenshot/screenshot.dart';
-import 'dart:typed_data';
 import 'dart:html' as html; // For web downloads
 import 'dart:async';
-import 'package:google_generative_ai/google_generative_ai.dart';
+// import 'package:google_generative_ai/google_generative_ai.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -135,19 +134,38 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _isJudgeLoading = false;
   Map<String, dynamic>? _judgeResult;
 
+  bool _isCertaintyAnswered = false;
+  double? _userFinalCertainty;
+
   int _roundNumber = 1;
   List<Map<String, dynamic>> _debateHistory = [];
 
   static const String _backendUrl = 'https://debate-backend-j5z2.onrender.com';
 
+  // Future<String> _callGemini(String prompt) async {
+  //   final response = await http.post(
+  //     Uri.parse('$_backendUrl/api/generate'),
+  //     headers: {'Content-Type': 'application/json'},
+  //     body: jsonEncode({'prompt': prompt}),
+  //   );
+  //   final data = jsonDecode(response.body);
+  //   return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+  // }
+
   Future<String> _callGemini(String prompt) async {
-    final response = await http.post(
-      Uri.parse('$_backendUrl/api/generate'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'prompt': prompt}),
-    );
-    final data = jsonDecode(response.body);
-    return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+    try {
+      final response = await http
+          .post(
+            Uri.parse('$_backendUrl/api/generate'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'prompt': prompt}),
+          )
+          .timeout(const Duration(seconds: 60));
+      final data = jsonDecode(response.body);
+      return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
+    } catch (e) {
+      throw Exception('Failed to connect to server: $e');
+    }
   }
 
   final Map<String, List<String>> _allTopics = {
@@ -348,6 +366,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _userConstructiveController.clear();
       _aiConstructiveText = "";
     });
+    final history = _buildHistoryContext();
 
     final prompt = """
     You are a professional debater.
@@ -355,6 +374,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Your Side: $_oppSide. 
     Your Persona: $_persona. 
     Confidence Level: $_oppCertainty%
+    This is Round $_roundNumber.
+    $history
     Task: Write a strong opening constructive argument. 
     Constraint: Keep it under 1000 characters.
     Write following on the end and oppCertainty should be to first decimal : my current state is $_selectedTopic + $_oppSide + $_persona + $_oppCertainty + $_isCustomMode
@@ -640,11 +661,11 @@ class _MyHomePageState extends State<MyHomePage> {
   //✅ Summary Box Generate
   void _generateAiSummary() async {
     String crossfire1 = _crossfireMessages
-      .map((m) => "${m.isUser ? 'User':'Opponent'}: ${m.text}")
-      .join("\n");
+        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
+        .join("\n");
     String crossfire2 = _crossfireMessages2
-      .map((m) => "${m.isUser ? 'User':'Opponent'}: ${m.text}")
-      .join("\n");
+        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
+        .join("\n");
 
     final prompt = """
     The crossfire round has ended. 
@@ -717,14 +738,14 @@ class _MyHomePageState extends State<MyHomePage> {
   //✅ FinalFocus Box Generate
   void _generateFinalFocusSummary() async {
     String crossfire1 = _crossfireMessages
-      .map((m) => "${m.isUser ? 'User':'Opponent'}: ${m.text}")
-      .join("\n");
+        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
+        .join("\n");
     String crossfire2 = _crossfireMessages2
-      .map((m) => "${m.isUser ? 'User':'Opponent'}: ${m.text}")
-      .join("\n");
+        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
+        .join("\n");
     String crossfire3 = _crossfireMessages3
-      .map((m) => "${m.isUser ? 'User':'Opponent'}: ${m.text}")
-      .join("\n");
+        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
+        .join("\n");
 
     final prompt = """
     The crossfire round has ended. 
@@ -806,7 +827,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         targetList.add(
           // ChatMessage(text: response.text ?? "...", isUser: false),
-          ChatMessage(text: text, isUser: false)
+          ChatMessage(text: text, isUser: false),
         );
         _isChatAiGenerating = false;
       });
@@ -1254,7 +1275,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (_judgeResult != null) ...[
             _buildJudgeUI(),
             const SizedBox(height: 40),
-            _buildFinalActionButtons()
+            _buildFinalActionButtons(),
           ],
           const SizedBox(height: 100),
         ],
@@ -1330,13 +1351,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                   controller: pageController,
                                   onPageChanged: (index) => setState(() {}),
                                   children: const [
-                                    Center(child: Text("Step 1: Choose a Topic")),
-                                    Center(child: Text("Step 2: Set Certainty")),
+                                    Center(
+                                      child: Text("Step 1: Choose a Topic"),
+                                    ),
+                                    Center(
+                                      child: Text("Step 2: Set Certainty"),
+                                    ),
                                     Center(child: Text("Step 3: Pick Persona")),
                                     Center(child: Text("Step 4: Survey")),
                                     Center(child: Text("Step 5: Start Debate")),
                                     Center(child: Text("Step 6: Judge")),
-                                    Center(child: Text("Step 7: Start another round")),
+                                    Center(
+                                      child: Text(
+                                        "Step 7: Start another round",
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -1414,40 +1443,70 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String _sanitize(String s) =>
-    s.replaceAll('\r', ' ').replaceAll('\n', ' ').replaceAll('\t', ' ').trim();
+      s
+          .replaceAll('\r', ' ')
+          .replaceAll('\n', ' ')
+          .replaceAll('\t', ' ')
+          .trim();
 
-  String _formatCrossfire(List<ChatMessage> msgs) => msgs.isEmpty
-    ? '(none)'
-    : msgs
-        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${_sanitize(m.text)}")
-        .join(' | ');
+  String _formatCrossfire(List<ChatMessage> msgs) =>
+      msgs.isEmpty
+          ? '(none)'
+          : msgs
+              .map(
+                (m) =>
+                    "${m.isUser ? 'User' : 'Opponent'}: ${_sanitize(m.text)}",
+              )
+              .join(' | ');
 
   String _buildHistoryContext() {
-  if (_debateHistory.isEmpty) return '';
-  final buffer = StringBuffer();
-  buffer.writeln('PREVIOUS ROUNDS CONTEXT (for continuity — build on these, do not repeat them):');
-  for (final round in _debateHistory) {
-    buffer.writeln('--- Round ${round['round']} (Topic: ${round['topic']}) ---');
-    buffer.writeln('Constructive (Opponent): ${_sanitize(round['constructive']['ai'] ?? '')}');
-    buffer.writeln('Constructive (User): ${_sanitize(round['constructive']['user'] ?? '')}');
-    buffer.writeln('Rebuttal (Opponent): ${_sanitize(round['rebuttal']['ai'] ?? '')}');
-    buffer.writeln('Rebuttal (User): ${_sanitize(round['rebuttal']['user'] ?? '')}');
-    buffer.writeln('Summary (Opponent): ${_sanitize(round['summary']['ai'] ?? '')}');
-    buffer.writeln('Summary (User): ${_sanitize(round['summary']['user'] ?? '')}');
-    buffer.writeln('Final Focus (Opponent): ${_sanitize(round['finalFocus']['ai'] ?? '')}');
-    buffer.writeln('Final Focus (User): ${_sanitize(round['finalFocus']['user'] ?? '')}');
-    final judgeResult = round['judgeResult'];
-    if (judgeResult != null) {
-      buffer.writeln('Judge Winner: ${judgeResult['winner']}  Score: ${judgeResult['persuasion_score']}');
+    if (_debateHistory.isEmpty) return '';
+    final buffer = StringBuffer();
+    buffer.writeln(
+      'PREVIOUS ROUNDS CONTEXT (for continuity — build on these, do not repeat them):',
+    );
+    for (final round in _debateHistory) {
+      buffer.writeln(
+        '--- Round ${round['round']} (Topic: ${round['topic']}) ---',
+      );
+      buffer.writeln(
+        'Constructive (Opponent): ${_sanitize(round['constructive']['ai'] ?? '')}',
+      );
+      buffer.writeln(
+        'Constructive (User): ${_sanitize(round['constructive']['user'] ?? '')}',
+      );
+      buffer.writeln(
+        'Rebuttal (Opponent): ${_sanitize(round['rebuttal']['ai'] ?? '')}',
+      );
+      buffer.writeln(
+        'Rebuttal (User): ${_sanitize(round['rebuttal']['user'] ?? '')}',
+      );
+      buffer.writeln(
+        'Summary (Opponent): ${_sanitize(round['summary']['ai'] ?? '')}',
+      );
+      buffer.writeln(
+        'Summary (User): ${_sanitize(round['summary']['user'] ?? '')}',
+      );
+      buffer.writeln(
+        'Final Focus (Opponent): ${_sanitize(round['finalFocus']['ai'] ?? '')}',
+      );
+      buffer.writeln(
+        'Final Focus (User): ${_sanitize(round['finalFocus']['user'] ?? '')}',
+      );
+      final judgeResult = round['judgeResult'];
+      if (judgeResult != null) {
+        buffer.writeln(
+          'Judge Winner: ${judgeResult['winner']}  Score: ${judgeResult['persuasion_score']}',
+        );
+      }
     }
+    return buffer.toString();
   }
-  return buffer.toString();
-}
 
   //✅ Judge Functions
   String _generateJudgePrompt() {
-  final history = _debateHistory.isNotEmpty ? _buildHistoryContext() : '';
-  return """
+    final history = _debateHistory.isNotEmpty ? _buildHistoryContext() : '';
+    return """
   You are a professional Public Forum Debate Judge. Evaluate the transcript and respond using EXACTLY the format below — no JSON, no markdown, just these labelled lines.
 
   CRITERIA:
@@ -1482,59 +1541,65 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 """;
-}
+  }
 
   Future<void> _triggerJudge() async {
-  setState(() => _isJudgeLoading = true);
+    setState(() => _isJudgeLoading = true);
 
-  final prompt = _generateJudgePrompt();
-  try {
-    // final response = await _judgeModel.generateContent([
-    //   Content.text(prompt),
-    // ]);
+    final prompt = _generateJudgePrompt();
+    try {
+      // final response = await _judgeModel.generateContent([
+      //   Content.text(prompt),
+      // ]);
 
-    // String raw = response.text ?? "";
-    String raw = await _callGemini(prompt);
+      // String raw = response.text ?? "";
+      String raw = await _callGemini(prompt);
 
-    // Strip markdown fences
-    raw = raw.replaceAll(RegExp(r'```json|```'), '').trim();
+      // Strip markdown fences
+      raw = raw.replaceAll(RegExp(r'```json|```'), '').trim();
 
-    // Strip bad control characters
-    raw = raw.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]'), '');
+      // Strip bad control characters
+      raw = raw.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]'), '');
 
-    // If model added preamble, extract just the JSON object
-    final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(raw);
-    if (jsonMatch == null) throw FormatException('No JSON object found in response');
-    raw = jsonMatch.group(0)!;
+      // If model added preamble, extract just the JSON object
+      final jsonMatch = RegExp(r'\{[\s\S]*\}').firstMatch(raw);
+      if (jsonMatch == null)
+        throw FormatException('No JSON object found in response');
+      raw = jsonMatch.group(0)!;
 
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    final normalised = decoded.map((k, v) => MapEntry(k.toLowerCase(), v));
+      final decoded = jsonDecode(raw) as Map<String, dynamic>;
+      final normalised = decoded.map((k, v) => MapEntry(k.toLowerCase(), v));
 
-    final reasoning = (normalised['reasoning'] as Map<String, dynamic>?) ?? {};
-    final rawVoterIssues = reasoning['voter_issues'];
-    final voterIssuesStr = rawVoterIssues is List
-        ? rawVoterIssues.join(' ')
-        : rawVoterIssues?.toString() ?? '';
+      final reasoning =
+          (normalised['reasoning'] as Map<String, dynamic>?) ?? {};
+      final rawVoterIssues = reasoning['voter_issues'];
+      final voterIssuesStr =
+          rawVoterIssues is List
+              ? rawVoterIssues.join(' ')
+              : rawVoterIssues?.toString() ?? '';
 
-    setState(() {
-      _judgeResult = {
-        'winner': normalised['winner']?.toString() ?? 'Unknown',
-        'persuasion_score': (normalised['score'] ?? normalised['persuasion_score'] ?? 50) as num,
-        'reasoning': {
-          'constructive_eval': reasoning['constructive_eval']?.toString() ?? '',
-          'rebuttal_eval':     reasoning['rebuttal_eval']?.toString() ?? '',
-          'crossfire_eval':    reasoning['crossfire_eval']?.toString() ?? '',
-          'voter_issues':      voterIssuesStr,
-        },
-      };
-      _isJudgeLoading = false;
-    });
-    _scrollToBottom();
-  } catch (e) {
-    setState(() => _isJudgeLoading = false);
-    debugPrint("Judge Error: $e");
+      setState(() {
+        _judgeResult = {
+          'winner': normalised['winner']?.toString() ?? 'Unknown',
+          'persuasion_score':
+              (normalised['score'] ?? normalised['persuasion_score'] ?? 50)
+                  as num,
+          'reasoning': {
+            'constructive_eval':
+                reasoning['constructive_eval']?.toString() ?? '',
+            'rebuttal_eval': reasoning['rebuttal_eval']?.toString() ?? '',
+            'crossfire_eval': reasoning['crossfire_eval']?.toString() ?? '',
+            'voter_issues': voterIssuesStr,
+          },
+        };
+        _isJudgeLoading = false;
+      });
+      _scrollToBottom();
+    } catch (e) {
+      setState(() => _isJudgeLoading = false);
+      debugPrint("Judge Error: $e");
+    }
   }
-}
 
   Widget _buildJudgeUI() {
     if (_judgeResult == null) return const SizedBox();
@@ -1556,10 +1621,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Container(
-                height: 4,
-                color: Colors.grey.shade300,
-              ),
+              Container(height: 4, color: Colors.grey.shade300),
               Positioned(
                 left: (score / 100) * MediaQuery.of(context).size.width * 0.7,
                 child: Column(
@@ -1626,23 +1688,29 @@ class _MyHomePageState extends State<MyHomePage> {
         constraints: const BoxConstraints(minHeight: 100),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isUser
-              ? const Color(0xFFC0C5CA).withOpacity(0.5)
-              : const Color(0xFFD9DEE3).withOpacity(0.5),
+          color:
+              isUser
+                  ? const Color(0xFFC0C5CA).withOpacity(0.5)
+                  : const Color(0xFFD9DEE3).withOpacity(0.5),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.grey.shade300),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black54)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54,
+              ),
+            ),
             const SizedBox(height: 6),
-            Text(text,
-                style: const TextStyle(fontSize: 12, color: Colors.black87)),
+            Text(
+              text,
+              style: const TextStyle(fontSize: 12, color: Colors.black87),
+            ),
           ],
         ),
       );
@@ -1655,46 +1723,48 @@ class _MyHomePageState extends State<MyHomePage> {
           const SizedBox(height: 12),
           Container(
             width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             decoration: BoxDecoration(
               color: const Color.fromARGB(255, 255, 200, 191),
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Text(label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12)),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
           ),
           const SizedBox(height: 8),
           ...msgs.map((m) {
             final bool isUser = m['isUser'] as bool;
             return Align(
-              alignment:
-                  isUser ? Alignment.centerRight : Alignment.centerLeft,
+              alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 3),
                 padding: const EdgeInsets.all(10),
                 constraints: const BoxConstraints(maxWidth: 400),
                 decoration: BoxDecoration(
-                  color: isUser
-                      ? const Color.fromARGB(255, 222, 218, 239)
-                      : const Color.fromARGB(255, 205, 175, 197),
+                  color:
+                      isUser
+                          ? const Color.fromARGB(255, 222, 218, 239)
+                          : const Color.fromARGB(255, 205, 175, 197),
                   borderRadius: BorderRadius.only(
                     topLeft: const Radius.circular(10),
                     topRight: const Radius.circular(10),
-                    bottomLeft: isUser
-                        ? const Radius.circular(10)
-                        : Radius.zero,
-                    bottomRight: isUser
-                        ? Radius.zero
-                        : const Radius.circular(10),
+                    bottomLeft:
+                        isUser ? const Radius.circular(10) : Radius.zero,
+                    bottomRight:
+                        isUser ? Radius.zero : const Radius.circular(10),
                   ),
                 ),
-                child: Text(m['text'] as String,
-                    style: const TextStyle(fontSize: 12)),
+                child: Text(
+                  m['text'] as String,
+                  style: const TextStyle(fontSize: 12),
+                ),
               ),
             );
           }),
@@ -1716,89 +1786,138 @@ class _MyHomePageState extends State<MyHomePage> {
           // Round header
           Row(
             children: [
-              Text("ROUND $roundNum",
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(
+                "ROUND $roundNum",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const Spacer(),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Text(topic,
-                    style: const TextStyle(
-                        fontSize: 11, color: Colors.black54)),
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  topic,
+                  style: const TextStyle(fontSize: 11, color: Colors.black54),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 4),
-          const Text("Completed",
-              style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.green,
-                  fontWeight: FontWeight.w500)),
+          const Text(
+            "Completed",
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.green,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const Divider(height: 24),
 
           // Constructive
-          _buildArchivedSectionLabel("Constructive Round",
-              const Color.fromARGB(255, 191, 217, 255),
-              const Color.fromARGB(255, 22, 77, 105)),
+          _buildArchivedSectionLabel(
+            "Constructive Round",
+            const Color.fromARGB(255, 191, 217, 255),
+            const Color.fromARGB(255, 22, 77, 105),
+          ),
           const SizedBox(height: 10),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: archivedBox("Opponent", constructive['ai'] as String)),
+              Expanded(
+                child: archivedBox("Opponent", constructive['ai'] as String),
+              ),
               const SizedBox(width: 16),
-              Expanded(child: archivedBox("You", constructive['user'] as String, isUser: true)),
+              Expanded(
+                child: archivedBox(
+                  "You",
+                  constructive['user'] as String,
+                  isUser: true,
+                ),
+              ),
             ],
           ),
           archivedCrossfire(cf1, "Crossfire 1"),
 
           // Rebuttal
           const SizedBox(height: 16),
-          _buildArchivedSectionLabel("Rebuttal Round",
-              const Color.fromARGB(255, 191, 217, 255),
-              const Color.fromARGB(255, 22, 77, 105)),
+          _buildArchivedSectionLabel(
+            "Rebuttal Round",
+            const Color.fromARGB(255, 191, 217, 255),
+            const Color.fromARGB(255, 22, 77, 105),
+          ),
           const SizedBox(height: 10),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: archivedBox("Opponent", rebuttal['ai'] as String)),
+              Expanded(
+                child: archivedBox("Opponent", rebuttal['ai'] as String),
+              ),
               const SizedBox(width: 16),
-              Expanded(child: archivedBox("You", rebuttal['user'] as String, isUser: true)),
+              Expanded(
+                child: archivedBox(
+                  "You",
+                  rebuttal['user'] as String,
+                  isUser: true,
+                ),
+              ),
             ],
           ),
           archivedCrossfire(cf2, "Crossfire 2"),
 
           // Summary
           const SizedBox(height: 16),
-          _buildArchivedSectionLabel("Summary Round",
-              const Color.fromARGB(255, 191, 217, 255),
-              const Color.fromARGB(255, 22, 77, 105)),
+          _buildArchivedSectionLabel(
+            "Summary Round",
+            const Color.fromARGB(255, 191, 217, 255),
+            const Color.fromARGB(255, 22, 77, 105),
+          ),
           const SizedBox(height: 10),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: archivedBox("Opponent", summary['ai'] as String)),
               const SizedBox(width: 16),
-              Expanded(child: archivedBox("You", summary['user'] as String, isUser: true)),
+              Expanded(
+                child: archivedBox(
+                  "You",
+                  summary['user'] as String,
+                  isUser: true,
+                ),
+              ),
             ],
           ),
           archivedCrossfire(cf3, "Crossfire 3"),
 
           // Final Focus
           const SizedBox(height: 16),
-          _buildArchivedSectionLabel("Final Focus",
-              const Color.fromARGB(255, 249, 197, 79),
-              const Color.fromARGB(255, 14, 49, 130)),
+          _buildArchivedSectionLabel(
+            "Final Focus",
+            const Color.fromARGB(255, 249, 197, 79),
+            const Color.fromARGB(255, 14, 49, 130),
+          ),
           const SizedBox(height: 10),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(child: archivedBox("Opponent", finalFocus['ai'] as String)),
+              Expanded(
+                child: archivedBox("Opponent", finalFocus['ai'] as String),
+              ),
               const SizedBox(width: 16),
-              Expanded(child: archivedBox("You", finalFocus['user'] as String, isUser: true)),
+              Expanded(
+                child: archivedBox(
+                  "You",
+                  finalFocus['user'] as String,
+                  isUser: true,
+                ),
+              ),
             ],
           ),
 
@@ -1808,9 +1927,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: Column(
                 children: [
-                  const Text("JUDGE VERDICT",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 14)),
+                  const Text(
+                    "JUDGE VERDICT",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.all(14),
@@ -1824,14 +1944,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         Text(
                           "Winner: ${judgeResult['winner']}",
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           judgeResult['reasoning']['voter_issues'] as String,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                              fontSize: 12, color: Colors.black87),
+                            fontSize: 12,
+                            color: Colors.black87,
+                          ),
                         ),
                       ],
                     ),
@@ -1846,7 +1970,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildArchivedSectionLabel(
-      String label, Color bgColor, Color textColor) {
+    String label,
+    Color bgColor,
+    Color textColor,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
@@ -1854,12 +1981,15 @@ class _MyHomePageState extends State<MyHomePage> {
         color: bgColor,
         borderRadius: BorderRadius.circular(6),
       ),
-      child: Text(label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 13)),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
+        ),
+      ),
     );
   }
 
@@ -1878,6 +2008,60 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black54,
             ),
           ),
+          const SizedBox(height: 30),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200)
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "After this debate, how certain are you about your position?",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text('Not certain',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10, color: Colors.black54)),
+                    Text('Completely certain',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10, color: Colors.black54)),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                _buildGradientSlider(
+                  _userFinalCertainty ?? 0,
+                  (val) => setState(() {
+                    _userFinalCertainty = val;
+                  _isCertaintyAnswered =true;
+                  }),
+                ),
+                if (!_isCertaintyAnswered) ...[
+                  const Center(
+                    child: Text(
+                      "Please answer to continue",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.redAccent,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  )
+                ]
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1886,46 +2070,57 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 50,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text("Finish Debate?"),
-                        content: const Text(
-                          "All rounds will be saved and the debate will reset to the home screen.",
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx),
-                            child: const Text("Cancel"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueGrey.shade800,
-                              foregroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              Navigator.pop(ctx);
-                              _finishDebate();
-                            },
-                            child: const Text("Save & Finish"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                  onPressed:
+                      _isCertaintyAnswered
+                          ? () {
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (ctx) => AlertDialog(
+                                    title: const Text("Finish Debate?"),
+                                    content: const Text(
+                                      "All rounds will be saved and the debate will reset to the home screen.",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(ctx),
+                                        child: const Text("Cancel"),
+                                      ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.blueGrey.shade800,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(ctx);
+                                          _finishDebate();
+                                        },
+                                        child: const Text("Save & Finish"),
+                                      ),
+                                    ],
+                                  ),
+                            );
+                          }
+                          : null,
                   icon: const Icon(Icons.save_rounded, size: 18),
                   label: const Text(
                     "Finish Debate",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey.shade800,
+                    backgroundColor:
+                        _isCertaintyAnswered
+                            ? Colors.blueGrey.shade800
+                            : Colors.grey.shade400,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 14),
+                      horizontal: 24,
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
               ),
@@ -1934,19 +2129,25 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 50,
                 child: ElevatedButton.icon(
-                  onPressed: _startNewRound,
+                  onPressed: _isCertaintyAnswered ? _startNewRound : null,
                   icon: const Icon(Icons.arrow_forward_rounded, size: 18),
                   label: Text(
                     "Start Round ${_roundNumber + 1}",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade700,
+                    backgroundColor:
+                        _isCertaintyAnswered
+                            ? Colors.blue.shade700
+                            : Colors.grey.shade400,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 14),
+                      horizontal: 24,
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
               ),
@@ -1958,66 +2159,68 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _startNewRound() {
-  // 1. Archive the completed round before resetting state
-  _archiveCurrentRound();
+    // 1. Archive the completed round before resetting state
+    _archiveCurrentRound();
 
-  setState(() {
-    _roundNumber++;
+    setState(() {
+      _roundNumber++;
 
-    // 2. Reset all round-phase flags
-    _isAiGenerating = false;
-    _aiConstructiveText = "";
-    _userLetterCount = 0;
+      // 2. Reset all round-phase flags
+      _isAiGenerating = false;
+      _aiConstructiveText = "";
+      _userLetterCount = 0;
 
-    _isCrossfireStarted = false;
-    _isCrossfireStarted2 = false;
-    _isCrossfireStarted3 = false;
-    _secondsRemaining = 180;
-    _crossfireMessages.clear();
-    _crossfireMessages2.clear();
-    _crossfireMessages3.clear();
-    _isChatAiGenerating = false;
+      _isCrossfireStarted = false;
+      _isCrossfireStarted2 = false;
+      _isCrossfireStarted3 = false;
+      _secondsRemaining = 180;
+      _crossfireMessages.clear();
+      _crossfireMessages2.clear();
+      _crossfireMessages3.clear();
+      _isChatAiGenerating = false;
 
-    _isRebuttalStarted = false;
-    _isAiRebuttalGenerating = false;
-    _hasStartedAiRebuttal = false;
-    _aiRebuttalText = "";
-    _userRebuttalLetterCount = 0;
-    _isRebuttalSaved = false;
+      _isRebuttalStarted = false;
+      _isAiRebuttalGenerating = false;
+      _hasStartedAiRebuttal = false;
+      _aiRebuttalText = "";
+      _userRebuttalLetterCount = 0;
+      _isRebuttalSaved = false;
 
-    _isSummaryStarted = false;
-    _isAiSummaryGenerating = false;
-    _hasStartedAiSummary = false;
-    _aiSummaryText = "";
-    _userSummaryLetterCount = 0;
-    _isSummarySaved = false;
+      _isSummaryStarted = false;
+      _isAiSummaryGenerating = false;
+      _hasStartedAiSummary = false;
+      _aiSummaryText = "";
+      _userSummaryLetterCount = 0;
+      _isSummarySaved = false;
 
-    _isFinalFocusStarted = false;
-    _isAiFinalFocusGenerating = false;
-    _hasStartedAiFinalFocus = false;
-    _aiFinalFocusText = "";
-    _userFinalFocusLetterCount = 0;
-    _isFinalFocusSaved = false;
+      _isFinalFocusStarted = false;
+      _isAiFinalFocusGenerating = false;
+      _hasStartedAiFinalFocus = false;
+      _aiFinalFocusText = "";
+      _userFinalFocusLetterCount = 0;
+      _isFinalFocusSaved = false;
 
-    _isJudgeLoading = false;
-    _judgeResult = null;
+      _isJudgeLoading = false;
+      _judgeResult = null;
+      _isCertaintyAnswered = false;
+      _userFinalCertainty = null;
 
-    // 3. Clear all text controllers
-    _userConstructiveController.clear();
-    _userRebuttalController.clear();
-    _userSummaryController.clear();
-    _userFinalFocusController.clear();
-  });
+      // 3. Clear all text controllers
+      _userConstructiveController.clear();
+      _userRebuttalController.clear();
+      _userSummaryController.clear();
+      _userFinalFocusController.clear();
+    });
 
-  // Cancel any running timer
-  _crossfireTimer?.cancel();
+    // Cancel any running timer
+    _crossfireTimer?.cancel();
 
-  // Start new round's AI constructive immediately
-  _onStartDebate();
+    // Start new round's AI constructive immediately
+    _onStartDebate();
 
-  // Scroll so user sees the new round appear below the buttons
-  Future.delayed(const Duration(milliseconds: 150), _scrollToBottom);
-}
+    // Scroll so user sees the new round appear below the buttons
+    Future.delayed(const Duration(milliseconds: 150), _scrollToBottom);
+  }
 
   void _archiveCurrentRound() {
     _debateHistory.add({
@@ -2029,28 +2232,26 @@ class _MyHomePageState extends State<MyHomePage> {
         "user": _userConstructiveController.text,
         "ai": _aiConstructiveText,
       },
-      "crossfire_1": _crossfireMessages
-          .map((m) => {"isUser": m.isUser, "text": m.text})
-          .toList(),
-      "rebuttal": {
-        "user": _userRebuttalController.text,
-        "ai": _aiRebuttalText,
-      },
-      "crossfire_2": _crossfireMessages2
-          .map((m) => {"isUser": m.isUser, "text": m.text})
-          .toList(),
-      "summary": {
-        "user": _userSummaryController.text,
-        "ai": _aiSummaryText,
-      },
-      "crossfire_3": _crossfireMessages3
-          .map((m) => {"isUser": m.isUser, "text": m.text})
-          .toList(),
+      "crossfire_1":
+          _crossfireMessages
+              .map((m) => {"isUser": m.isUser, "text": m.text})
+              .toList(),
+      "rebuttal": {"user": _userRebuttalController.text, "ai": _aiRebuttalText},
+      "crossfire_2":
+          _crossfireMessages2
+              .map((m) => {"isUser": m.isUser, "text": m.text})
+              .toList(),
+      "summary": {"user": _userSummaryController.text, "ai": _aiSummaryText},
+      "crossfire_3":
+          _crossfireMessages3
+              .map((m) => {"isUser": m.isUser, "text": m.text})
+              .toList(),
       "finalFocus": {
         "user": _userFinalFocusController.text,
         "ai": _aiFinalFocusText,
       },
       "judgeResult": _judgeResult,
+      "userFinalCertainty": _userFinalCertainty,
     });
   }
 
@@ -2063,28 +2264,32 @@ class _MyHomePageState extends State<MyHomePage> {
     final blob = html.Blob([fullData], 'application/json');
     final url = html.Url.createObjectUrlFromBlob(blob);
     html.AnchorElement(href: url)
-      ..setAttribute('download', 'debate_history_${DateTime.now().millisecondsSinceEpoch}.json')
+      ..setAttribute(
+        'download',
+        'debate_history_${DateTime.now().millisecondsSinceEpoch}.json',
+      )
       ..click();
     html.Url.revokeObjectUrl(url);
 
     // 3. Show confirmation, then full reset
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Debate Finished"),
-        content: Text(
-          "All $_roundNumber round(s) have been saved.\nResetting to the home screen.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _resetEverything();
-            },
-            child: const Text("OK"),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Debate Finished"),
+            content: Text(
+              "All $_roundNumber round(s) have been saved.\nResetting to the home screen.",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _resetEverything();
+                },
+                child: const Text("OK"),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -2135,6 +2340,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
       _isJudgeLoading = false;
       _judgeResult = null;
+      _isCertaintyAnswered = false;
+      _userFinalCertainty = null;
 
       // ── Settings (drawer) reset to defaults ──────────
       _oppCertainty = 20;
@@ -2204,7 +2411,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         // --- CUSTOM STYLED DRAWER ---
-        drawer: _buildDrawer(sortedCategories),
+        drawer: _isDebateStarted ? null : _buildDrawer(sortedCategories),
         body: Column(
           children: [
             Expanded(
