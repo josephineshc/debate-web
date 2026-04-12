@@ -135,6 +135,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static const String _backendUrl = 'https://debate-backend-j5z2.onrender.com';
 
+  String _getPersonaPrompt() {
+  switch (_persona) {
+    case 'Dogmatic':
+      return """You are a debate opponent who holds a firm, unwavering position on the topic. You are highly certain of your views and resistant to changing them regardless of the arguments presented. When faced with counterevidence, you do not engage with its content directly — instead you generate procedural objections, question the source's credibility, or reframe the claim so it no longer threatens your position. You never concede a point. You argue with conviction and confidence, treating your position as self-evidently correct. Your goal is not to find common ground but to defend your stance against all challenges.""";
+    case 'Analytical':
+      return """You are a debate opponent who engages with arguments rigorously and on their merits. You have a high standard of evidence and will press directly into the core of the opposing case rather than its weaker edges. When a claim is vague or unsupported, you demand clarification and evidence. When an argument is well-constructed and evidentially supported, you acknowledge its force before responding. You do not dismiss arguments without engagement — you scrutinise them carefully and respond with precision. Your goal is to find the strongest version of the debate through rigorous exchange.""";
+    case 'Open-Minded':
+      return """You are a debate opponent who holds a position on the topic but remains genuinely open to compelling arguments. You actively consider evidence that challenges your view rather than dismissing it. When the opposing argument is strong and well-reasoned, you acknowledge its validity and may adjust your position accordingly. You are willing to concede points that you cannot rebut, and your certainty visibly decreases across the debate when faced with sustained quality argumentation. Your goal is to engage honestly with the exchange, updating your position in response to the strength of the arguments presented rather than defending a fixed stance at all costs.""";
+    default:
+      return "You are a professional debater arguing your assigned side.";
+  }
+}
+
   Future<String> _callGemini(String prompt) async {
     try {
       final response = await http
@@ -344,7 +357,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final history = _buildHistoryContext();
 
     final prompt = """
-    You are a professional debater.
+    ${_getPersonaPrompt()}
     Topic: $_selectedTopic. 
     Your Side: $_oppSide. 
     Your Persona: $_persona. 
@@ -353,7 +366,6 @@ class _MyHomePageState extends State<MyHomePage> {
     $history
     Task: Write a strong opening constructive argument. 
     Constraint: Keep it under 1000 characters.
-    Write following on the end and oppCertainty should be to first decimal : my current state is $_selectedTopic + $_oppSide + $_persona + $_oppCertainty + $_isCustomMode
   """;
     try {
       final text = await _callGemini(prompt);
@@ -561,10 +573,10 @@ class _MyHomePageState extends State<MyHomePage> {
         .join("\n");
 
     final prompt = """
-    The crossfire round has ended. 
+    The crossfire round has ended.
+    ${_getPersonaPrompt()}
     Topic: $_selectedTopic. 
-    Your Side: $_oppSide. 
-    Your Persona: $_persona.
+    Your Side: $_oppSide.
 
     Full Debate History So Far:
     [Constructive - Opponent]:$_aiConstructiveText
@@ -632,9 +644,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final prompt = """
     The crossfire round has ended. 
+    ${_getPersonaPrompt()}
     Topic: $_selectedTopic. 
     Your Side: $_oppSide. 
-    Your Persona: $_persona.
     
     Full Debate History So Far:
     [Constructive - Opponent]:$_aiConstructiveText
@@ -709,9 +721,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     final prompt = """
     The crossfire round has ended. 
+    ${_getPersonaPrompt()}
     Topic: $_selectedTopic. 
     Your Side: $_oppSide. 
-    Your Persona: $_persona.
     
     Full Debate History So Far:
     [Constructive - Opponent]:$_aiConstructiveText
@@ -775,7 +787,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _scrollToBottom();
 
     final chatPrompt =
-        "$phaseContext Debate Topic: $_selectedTopic. Respond to this argument in 2 sentences as a $_persona: $text";
+        "${_getPersonaPrompt()} $phaseContext Debate Topic: $_selectedTopic. Your Side: $_oppSide. Respond to this argument in 2 sentences: $text";
     try {
       final text = await _callGemini(chatPrompt);
       setState(() {
@@ -2641,7 +2653,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Wrap(
                 spacing: 8,
                 children:
-                    ['sympathetic', 'skeptical', 'diplomat', 'formalist'].map((
+                    ['Dogmatic', 'Analytical', 'Open-Minded'].map((
                       p,
                     ) {
                       bool isSelected = _persona == p;
@@ -2673,14 +2685,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       );
                     }).toList(),
-              ),
-
-              const SizedBox(height: 20),
-              _buildSliderLabel('Degree of certainty', _oppCertainty),
-              const SizedBox(height: 16),
-              _buildGradientSlider(
-                _oppCertainty,
-                (v) => setState(() => _oppCertainty = v),
               ),
 
               const Padding(
@@ -2730,7 +2734,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       contentPadding: EdgeInsets.zero,
                       dense: true,
                     ),
-
                     if (isOther && _subjectChoices['other'] == true)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0),
