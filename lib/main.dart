@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       TextEditingController();
 
   Timer? _crossfireTimer;
-  int _secondsRemaining = 120;
+  int _secondsRemaining = 180;
   bool _isCrossfireStarted = false;
   bool _isCrossfireStarted2 = false;
   bool _isCrossfireStarted3 = false;
@@ -350,7 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isDebateStarted = true;
       _isAiGenerating = true;
       _isCrossfireStarted = false;
-      _secondsRemaining = 120;
+      _secondsRemaining = 180;
       _userConstructiveController.clear();
       _aiConstructiveText = "";
     });
@@ -605,7 +605,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isRebuttalSaved = true;
       _isCrossfireStarted2 = true;
-      _secondsRemaining = 120;
+      _secondsRemaining = 180;
     });
     _crossfireTimer?.cancel();
     _crossfireTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -678,7 +678,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isSummarySaved = true;
       _isCrossfireStarted3 = true;
-      _secondsRemaining = 120;
+      _secondsRemaining = 180;
     });
     _crossfireTimer?.cancel();
     _crossfireTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -1454,7 +1454,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final history = _debateHistory.isNotEmpty ? _buildHistoryContext() : '';
     return """
   You are a professional Public Forum Debate Judge. Evaluate the transcript and respond using EXACTLY the format below — no JSON, no markdown, just these labelled lines.
-
+  There are several things to keep in mind when you judge a public forum debate round. First and foremost, the debater that wins should be the debater that persuaded you more. This can happen in many ways -- you might like their case better, you might think they gave an excellent final focus, or you might be overall more persuaded by their speaking style.
+  The judge should write their reason for decision on the ballot. The judge will also give a explanation of their decision as well as areas of improvement to the students in the debate round.
   CRITERIA:
   1. Argumentation & Evidence
   2. Refutation
@@ -2084,7 +2085,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCrossfireStarted = false;
       _isCrossfireStarted2 = false;
       _isCrossfireStarted3 = false;
-      _secondsRemaining = 120;
+      _secondsRemaining = 180;
       _crossfireMessages.clear();
       _crossfireMessages2.clear();
       _crossfireMessages3.clear();
@@ -2258,7 +2259,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCrossfireStarted = false;
       _isCrossfireStarted2 = false;
       _isCrossfireStarted3 = false;
-      _secondsRemaining = 120;
+      _secondsRemaining = 180;
       _crossfireMessages.clear();
       _crossfireMessages2.clear();
       _crossfireMessages3.clear();
