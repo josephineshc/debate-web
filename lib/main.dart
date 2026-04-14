@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       TextEditingController();
 
   Timer? _crossfireTimer;
-  int _secondsRemaining = 180;
+  int _secondsRemaining = 120;
   bool _isCrossfireStarted = false;
   bool _isCrossfireStarted2 = false;
   bool _isCrossfireStarted3 = false;
@@ -350,7 +350,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isDebateStarted = true;
       _isAiGenerating = true;
       _isCrossfireStarted = false;
-      _secondsRemaining = 20;
+      _secondsRemaining = 120;
       _userConstructiveController.clear();
       _aiConstructiveText = "";
     });
@@ -605,7 +605,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isRebuttalSaved = true;
       _isCrossfireStarted2 = true;
-      _secondsRemaining = 20;
+      _secondsRemaining = 120;
     });
     _crossfireTimer?.cancel();
     _crossfireTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -678,7 +678,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _isSummarySaved = true;
       _isCrossfireStarted3 = true;
-      _secondsRemaining = 20;
+      _secondsRemaining = 120;
     });
     _crossfireTimer?.cancel();
     _crossfireTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -2084,7 +2084,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCrossfireStarted = false;
       _isCrossfireStarted2 = false;
       _isCrossfireStarted3 = false;
-      _secondsRemaining = 180;
+      _secondsRemaining = 120;
       _crossfireMessages.clear();
       _crossfireMessages2.clear();
       _crossfireMessages3.clear();
@@ -2258,7 +2258,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isCrossfireStarted = false;
       _isCrossfireStarted2 = false;
       _isCrossfireStarted3 = false;
-      _secondsRemaining = 180;
+      _secondsRemaining = 120;
       _crossfireMessages.clear();
       _crossfireMessages2.clear();
       _crossfireMessages3.clear();
