@@ -8055,7 +8055,7 @@ _.CW=""
 _.cx="Select or write a subject to start"
 _.cy=c
 _.db=null
-_.dx=180
+_.dx=120
 _.fx=_.fr=_.dy=!1
 _.fy=0
 _.id=d
@@ -44978,7 +44978,7 @@ A.aq5.prototype={
 $0(){var s=this.a
 s.ch=s.ay=!0
 s.dy=!1
-s.dx=20
+s.dx=120
 s.cy.eZ(0,B.bo)
 s.CW=""},
 $S:0}
@@ -45041,7 +45041,7 @@ $S:0}
 A.aqr.prototype={
 $0(){var s=this.a
 s.fr=s.ry=!0
-s.dx=20},
+s.dx=120},
 $S:0}
 A.aqs.prototype={
 $1(a){var s=this.a
@@ -45077,7 +45077,7 @@ $S:0}
 A.aqu.prototype={
 $0(){var s=this.a
 s.fx=s.N=!0
-s.dx=20},
+s.dx=120},
 $S:0}
 A.aqv.prototype={
 $1(a){var s=this.a
@@ -45314,7 +45314,7 @@ s.ch=!1
 s.CW=""
 s.fy=0
 s.fx=s.fr=s.dy=!1
-s.dx=180
+s.dx=120
 B.b.a3(s.id)
 B.b.a3(s.k1)
 B.b.a3(s.k2)
@@ -45368,7 +45368,7 @@ s.ch=s.ay=!1
 s.CW=""
 s.fy=0
 s.fx=s.fr=s.dy=!1
-s.dx=180
+s.dx=120
 B.b.a3(s.id)
 B.b.a3(s.k1)
 B.b.a3(s.k2)
