@@ -136,17 +136,17 @@ class _MyHomePageState extends State<MyHomePage> {
   static const String _backendUrl = 'https://debate-backend-j5z2.onrender.com';
 
   String _getPersonaPrompt() {
-  switch (_persona) {
-    case 'Dogmatic':
-      return """You are a debate opponent who holds a firm, unwavering position on the topic. You are highly certain of your views and resistant to changing them regardless of the arguments presented. When faced with counterevidence, you do not engage with its content directly — instead you generate procedural objections, question the source's credibility, or reframe the claim so it no longer threatens your position. You never concede a point. You argue with conviction and confidence, treating your position as self-evidently correct. Your goal is not to find common ground but to defend your stance against all challenges.""";
-    case 'Analytical':
-      return """You are a debate opponent who engages with arguments rigorously and on their merits. You have a high standard of evidence and will press directly into the core of the opposing case rather than its weaker edges. When a claim is vague or unsupported, you demand clarification and evidence. When an argument is well-constructed and evidentially supported, you acknowledge its force before responding. You do not dismiss arguments without engagement — you scrutinise them carefully and respond with precision. Your goal is to find the strongest version of the debate through rigorous exchange.""";
-    case 'Open-Minded':
-      return """You are a debate opponent who holds a position on the topic but remains genuinely open to compelling arguments. You actively consider evidence that challenges your view rather than dismissing it. When the opposing argument is strong and well-reasoned, you acknowledge its validity and may adjust your position accordingly. You are willing to concede points that you cannot rebut, and your certainty visibly decreases across the debate when faced with sustained quality argumentation. Your goal is to engage honestly with the exchange, updating your position in response to the strength of the arguments presented rather than defending a fixed stance at all costs.""";
-    default:
-      return "You are a professional debater arguing your assigned side.";
+    switch (_persona) {
+      case 'Dogmatic':
+        return """You are a debate opponent who holds a firm, unwavering position on the topic. You are highly certain of your views and resistant to changing them regardless of the arguments presented. When faced with counterevidence, you do not engage with its content directly — instead you generate procedural objections, question the source's credibility, or reframe the claim so it no longer threatens your position. You never concede a point. You argue with conviction and confidence, treating your position as self-evidently correct. Your goal is not to find common ground but to defend your stance against all challenges.""";
+      case 'Analytical':
+        return """You are a debate opponent who engages with arguments rigorously and on their merits. You have a high standard of evidence and will press directly into the core of the opposing case rather than its weaker edges. When a claim is vague or unsupported, you demand clarification and evidence. When an argument is well-constructed and evidentially supported, you acknowledge its force before responding. You do not dismiss arguments without engagement — you scrutinise them carefully and respond with precision. Your goal is to find the strongest version of the debate through rigorous exchange.""";
+      case 'Open-Minded':
+        return """You are a debate opponent who holds a position on the topic but remains genuinely open to compelling arguments. You actively consider evidence that challenges your view rather than dismissing it. When the opposing argument is strong and well-reasoned, you acknowledge its validity and may adjust your position accordingly. You are willing to concede points that you cannot rebut, and your certainty visibly decreases across the debate when faced with sustained quality argumentation. Your goal is to engage honestly with the exchange, updating your position in response to the strength of the arguments presented rather than defending a fixed stance at all costs.""";
+      default:
+        return "You are a professional debater arguing your assigned side.";
+    }
   }
-}
 
   Future<String> _callGemini(String prompt) async {
     try {
@@ -1235,7 +1235,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildDots(PageController controller) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(7, (index) {
+      children: List.generate(3, (index) {
         double currentPage = controller.hasClients ? controller.page ?? 0 : 0;
         bool isActive = index == currentPage.round();
 
@@ -1296,20 +1296,23 @@ class _MyHomePageState extends State<MyHomePage> {
                                 child: PageView(
                                   controller: pageController,
                                   onPageChanged: (index) => setState(() {}),
-                                  children: const [
-                                    Center(
-                                      child: Text("Step 1: Choose a Topic"),
+                                  children: [
+                                    InteractiveViewer(
+                                      child: Image.asset(
+                                        'assets/images/guide_page2.jpg',
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-                                    Center(
-                                      child: Text("Step 2: Set Certainty"),
+                                    InteractiveViewer(
+                                      child: Image.asset(
+                                        'assets/images/guide_page3.jpg',
+                                        fit: BoxFit.contain,
+                                      ),
                                     ),
-                                    Center(child: Text("Step 3: Pick Persona")),
-                                    Center(child: Text("Step 4: Survey")),
-                                    Center(child: Text("Step 5: Start Debate")),
-                                    Center(child: Text("Step 6: Judge")),
-                                    Center(
-                                      child: Text(
-                                        "Step 7: Start another round",
+                                    InteractiveViewer(
+                                      child: Image.asset(
+                                        'assets/images/guide_page1.jpg',
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
                                   ],
@@ -2016,7 +2019,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           : null,
                   icon: const Icon(Icons.save_rounded, size: 18),
                   label: const Text(
-                    "Finish Debate",
+                    "Finish Debate & Complete Survey Form",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
@@ -2189,6 +2192,11 @@ class _MyHomePageState extends State<MyHomePage> {
       )
       ..click();
     html.Url.revokeObjectUrl(url);
+
+    html.window.open(
+    'https://docs.google.com/forms/d/e/1FAIpQLSerBP2wHW9j8F-_sfplFcql_jD4MLRoWX1o2DsdVzJWG7PP9A/viewform',
+    '_blank',
+  );
 
     showDialog(
       context: context,
@@ -2413,22 +2421,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //✅ Drawer Functions
-  Future<void> _captureWebScreenshot() async {
-    final Uint8List? imageBytes = await _screenshotController.capture();
-    if (_isKakaoTalkBrowser()) {
-      _showOpenInBrowserDialog();
-      return;
-    }
-    if (imageBytes != null) {
-      final blob = html.Blob([imageBytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor =
-          html.AnchorElement(href: url)
-            ..setAttribute("download", "debate_intro.png")
-            ..click();
-      html.Url.revokeObjectUrl(url);
-    }
-  }
+  // Future<void> _captureWebScreenshot() async {
+  //   final Uint8List? imageBytes = await _screenshotController.capture();
+  //   if (_isKakaoTalkBrowser()) {
+  //     _showOpenInBrowserDialog();
+  //     return;
+  //   }
+  //   if (imageBytes != null) {
+  //     final blob = html.Blob([imageBytes]);
+  //     final url = html.Url.createObjectUrlFromBlob(blob);
+  //     final anchor =
+  //         html.AnchorElement(href: url)
+  //           ..setAttribute("download", "debate_intro.png")
+  //           ..click();
+  //     html.Url.revokeObjectUrl(url);
+  //   }
+  // }
 
   Widget _buildDrawer(sortedCategories) {
     bool isTopicEmpty =
@@ -2653,9 +2661,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Wrap(
                 spacing: 8,
                 children:
-                    ['Dogmatic', 'Analytical', 'Open-Minded'].map((
-                      p,
-                    ) {
+                    ['Dogmatic', 'Analytical', 'Open-Minded'].map((p) {
                       bool isSelected = _persona == p;
                       return ChoiceChip(
                         showCheckmark: false,
@@ -2800,7 +2806,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (finalTopic.isNotEmpty) {
                       setState(() => _selectedTopic = finalTopic);
                       Navigator.pop(context);
-                      await _captureWebScreenshot();
+                      // await _captureWebScreenshot();
                       await Future.delayed(const Duration(milliseconds: 300));
                       _generateIntroduction(finalTopic);
                       _onStartDebate();
