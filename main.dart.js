@@ -8055,7 +8055,7 @@ _.CW=""
 _.cx="Select or write a subject to start"
 _.cy=c
 _.db=null
-_.dx=120
+_.dx=180
 _.fx=_.fr=_.dy=!1
 _.fy=0
 _.id=d
@@ -44726,7 +44726,7 @@ var $async$zf=A.R(function(a2,a3){if(a2===1){p.push(a3)
 s=q}for(;;)switch(s){case 0:o.W(new A.aqA(o))
 e=o.ba.length!==0?o.O1():""
 d=e.length!==0?"PREVIOUS ROUNDS:\n"+e+"\n":""
-n="  You are a professional Public Forum Debate Judge. Evaluate the transcript and respond using EXACTLY the format below \u2014 no JSON, no markdown, just these labelled lines.\n\n  CRITERIA:\n  1. Argumentation & Evidence\n  2. Refutation\n  3. Impact Calculus\n  4. Consistency\n\n  TRANSCRIPT:\n  "+d+"CURRENT ROUND TRANSCRIPT (Round "+o.aj+"):\n  Constructive (Opponent): "+o.lk(o.CW)+"\n  Constructive (User): "+o.lk(o.cy.a.a)+"\n  Crossfire 1: "+o.F4(o.id)+"\n  Rebuttal (Opponent): "+o.lk(o.R8)+"\n  Rebuttal (User): "+o.lk(o.rx.a.a)+"\n  Crossfire 2: "+o.F4(o.k1)+"\n  Summary (Opponent): "+o.lk(o.xr)+"\n  Summary (User): "+o.lk(o.y2.a.a)+"\n  Crossfire 3: "+o.F4(o.k2)+"\n  Final Focus (Opponent): "+o.lk(o.R)+"\n  Final Focus (User): "+o.lk(o.a5.a.a)+'\n\n  YOUR ENTIRE RESPONSE MUST BE ONLY THIS JSON, nothing before or after it:\n  {\n    "WINNER": (exactly "User" or "Opponent"),\n    "SCORE": (0-100 integer, 50 = tie, below 50 = Opponent won, above 50 = User won),\n    "reasoning": {\n      "constructive_eval": (single sentence evaluation),\n      "rebuttal_eval": (single sentence evaluation),\n      "crossfire_eval": (single sentence evaluation),\n      "voter_issues": (single sentence \u2014 the key reasons why the winner won)\n    }\n  }\n'
+n="  You are a professional Public Forum Debate Judge. Evaluate the transcript and respond using EXACTLY the format below \u2014 no JSON, no markdown, just these labelled lines.\n  There are several things to keep in mind when you judge a public forum debate round. First and foremost, the debater that wins should be the debater that persuaded you more. This can happen in many ways -- you might like their case better, you might think they gave an excellent final focus, or you might be overall more persuaded by their speaking style.\n  The judge should write their reason for decision on the ballot. The judge will also give a explanation of their decision as well as areas of improvement to the students in the debate round.\n  CRITERIA:\n  1. Argumentation & Evidence\n  2. Refutation\n  3. Impact Calculus\n  4. Consistency\n\n  TRANSCRIPT:\n  "+d+"CURRENT ROUND TRANSCRIPT (Round "+o.aj+"):\n  Constructive (Opponent): "+o.lk(o.CW)+"\n  Constructive (User): "+o.lk(o.cy.a.a)+"\n  Crossfire 1: "+o.F4(o.id)+"\n  Rebuttal (Opponent): "+o.lk(o.R8)+"\n  Rebuttal (User): "+o.lk(o.rx.a.a)+"\n  Crossfire 2: "+o.F4(o.k1)+"\n  Summary (Opponent): "+o.lk(o.xr)+"\n  Summary (User): "+o.lk(o.y2.a.a)+"\n  Crossfire 3: "+o.F4(o.k2)+"\n  Final Focus (Opponent): "+o.lk(o.R)+"\n  Final Focus (User): "+o.lk(o.a5.a.a)+'\n\n  YOUR ENTIRE RESPONSE MUST BE ONLY THIS JSON, nothing before or after it:\n  {\n    "WINNER": (exactly "User" or "Opponent"),\n    "SCORE": (0-100 integer, 50 = tie, below 50 = Opponent won, above 50 = User won),\n    "reasoning": {\n      "constructive_eval": (single sentence evaluation),\n      "rebuttal_eval": (single sentence evaluation),\n      "crossfire_eval": (single sentence evaluation),\n      "voter_issues": (single sentence \u2014 the key reasons why the winner won)\n    }\n  }\n'
 q=3
 s=6
 return A.S(o.le(n),$async$zf)
@@ -44978,7 +44978,7 @@ A.aq5.prototype={
 $0(){var s=this.a
 s.ch=s.ay=!0
 s.dy=!1
-s.dx=120
+s.dx=180
 s.cy.eZ(0,B.bo)
 s.CW=""},
 $S:0}
@@ -45041,7 +45041,7 @@ $S:0}
 A.aqr.prototype={
 $0(){var s=this.a
 s.fr=s.ry=!0
-s.dx=120},
+s.dx=180},
 $S:0}
 A.aqs.prototype={
 $1(a){var s=this.a
@@ -45077,7 +45077,7 @@ $S:0}
 A.aqu.prototype={
 $0(){var s=this.a
 s.fx=s.N=!0
-s.dx=120},
+s.dx=180},
 $S:0}
 A.aqv.prototype={
 $1(a){var s=this.a
@@ -45314,7 +45314,7 @@ s.ch=!1
 s.CW=""
 s.fy=0
 s.fx=s.fr=s.dy=!1
-s.dx=120
+s.dx=180
 B.b.a3(s.id)
 B.b.a3(s.k1)
 B.b.a3(s.k2)
@@ -45368,7 +45368,7 @@ s.ch=s.ay=!1
 s.CW=""
 s.fy=0
 s.fx=s.fr=s.dy=!1
-s.dx=120
+s.dx=180
 B.b.a3(s.id)
 B.b.a3(s.k1)
 B.b.a3(s.k2)
