@@ -44393,7 +44393,7 @@ k=A.ia("https://debate-backend-j5z2.onrender.com/api/generate")
 j=t.N
 i=A.aq(["Content-Type","application/json"],j,j)
 s=7
-return A.S(A.aWc(k,B.c1.J4(A.aq(["prompt",a],j,j),null),i).L7(0,B.Gd),$async$le)
+return A.S(A.aWc(k,B.c1.J4(A.aq(["prompt",a],j,j),null),i).L7(0,B.G_),$async$le)
 case 7:n=c
 i=n
 m=B.c1.Iv(0,A.aVl(A.aT9(i.e)).fO(0,i.w),null)
@@ -46145,7 +46145,7 @@ if(s!=null&&s.a!=null)return
 r=this.w
 if(r){p.z=B.aI
 q=p.kf(1,B.ei,B.FY)}else{p.z=B.aI
-q=p.kf(0,B.Ff,B.G3)}q.ca(new A.alw(this,r),t.H)},
+q=p.kf(0,B.Ff,B.G4)}q.ca(new A.alw(this,r),t.H)},
 ag7(a){this.W(new A.alB(this,a))},
 K(a3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b=this,a=null,a0=b.a,a1=a0.w==null,a2=!a1
 a0=a0.y
@@ -46771,7 +46771,7 @@ s=p.d
 r=p.r
 r===$&&A.a()
 q=p.e
-return A.aB_(new A.JM(new A.aG(o.geq(),2,B.p,-1),r,new A.i(0,q),null),B.bQ,B.Gb,s.a,s.b)}}
+return A.aB_(new A.JM(new A.aG(o.geq(),2,B.p,-1),r,new A.i(0,q),null),B.bQ,B.Gc,s.a,s.b)}}
 A.alT.prototype={
 $0(){return this.a.W(new A.alS())},
 $S:0}
@@ -48242,7 +48242,7 @@ else if(t.ks.b(a))s.a8$.Z(a)},
 acP(){if(this.c<=0)this.gSv().eK(0)},
 gSv(){var s=this,r=s.av$
 if(r===$){$.I2()
-r=s.av$=new A.asG(A.v(t.S,t.GG),B.D,new A.C5(),s.gacx(),s.gacO(),B.G2)}return r}}
+r=s.av$=new A.asG(A.v(t.S,t.GG),B.D,new A.C5(),s.gacx(),s.gacO(),B.G3)}return r}}
 A.a6_.prototype={
 $0(){var s=null
 return A.b([A.jx("Event",this.a,!0,B.bF,s,s,s,B.b0,!1,!0,!0,B.c9,s)],t.D)},
@@ -49128,7 +49128,7 @@ r=a.gaX()
 q=a.gbd(a)
 p=a.gdW(a)
 o=new A.RV()
-A.c5(B.Ga,o.gagf())
+A.c5(B.Gb,o.gagf())
 n=new A.wq(r,s,q,p,o)
 m.z.m(0,a.gaX(),n)
 o=a.gbL(a)
@@ -51512,7 +51512,7 @@ s.cq(0,B.w,!q.a.ay)
 s.cq(0,B.z,q.a.ax)
 s.a_(0,new A.arz(q))
 s=q.a
-r=A.bk(p,B.G4,p,s.ax?1:0,q)
+r=A.bk(p,B.G5,p,s.ax?1:0,q)
 q.d=r
 q.Q=A.bK(B.R,r,p)
 r=q.a
@@ -52967,7 +52967,7 @@ return new A.tn(A.KR(!0,s,!1),new A.bu(s,r),new A.bu(s,r),s,s)}}
 A.tn.prototype={
 aB(){var s,r=this
 r.aQ()
-s=r.f=A.bk(null,B.G7,null,r.a.z?1:0,r)
+s=r.f=A.bk(null,B.G8,null,r.a.z?1:0,r)
 s.bu()
 s.cv$.F(0,r.ga6s())
 s.bu()
@@ -54067,7 +54067,7 @@ return q}}
 A.zh.prototype={
 v2(a){var s=this.ch
 s===$&&A.a()
-s.e=B.G6
+s.e=B.G7
 s.br(0)
 s=this.cx
 s===$&&A.a()
@@ -54796,7 +54796,7 @@ au(){return new A.Rb(null,null)}}
 A.Rb.prototype={
 aB(){var s,r=this,q=null
 r.aQ()
-r.e=A.bk(q,B.G0,q,r.a.w?1:0,r)
+r.e=A.bk(q,B.G1,q,r.a.w?1:0,r)
 s=A.bk(q,B.dL,q,q,r)
 r.d=s
 r.f=A.bK(B.R,s,new A.oW(B.R))
@@ -55650,7 +55650,7 @@ g=A.bC(h,c7.gaE().ax,f,c8,i,e,l.at)
 d=c7.a.y&&!c7.gae4()
 l=d?1:0
 c7.gaE()
-c=A.aL3(g,B.R,B.G5,l)}else c=c8
+c=A.aL3(g,B.R,B.G6,l)}else c=c8
 if(!c7.gaE().M)if(c7.gli())c7.gaE()
 else c7.gaE()
 else if(c7.a.r)if(c7.gli())c7.gaE()
@@ -56994,7 +56994,7 @@ if(J.M(b)!==A.u(s))return!1
 return b instanceof A.AB&&J.d(b.a,s.a)&&J.d(b.b,s.b)&&J.d(b.c,s.c)&&b.d==s.d&&J.d(b.e,s.e)&&J.d(b.f,s.f)&&J.d(b.r,s.r)&&b.w==s.w&&J.d(b.Q,s.Q)&&b.as==s.as}}
 A.Vy.prototype={}
 A.N9.prototype={
-gm3(a){return B.Gc},
+gm3(a){return B.Gd},
 HU(a,b,c,d,e,f){return new A.F4(new A.acE(a,c,d,e,f),a,null)}}
 A.acE.prototype={
 $4(a,b,c,d){var s=this
@@ -57202,7 +57202,7 @@ au(){return new A.Rz(null,null)}}
 A.Rz.prototype={
 aB(){var s,r=this
 r.aQ()
-s=A.bk(null,B.G9,null,null,r)
+s=A.bk(null,B.Ga,null,null,r)
 r.d!==$&&A.ba()
 r.d=s
 r.Uo()},
@@ -58050,7 +58050,7 @@ s.aL$=null
 s.aG()}}
 A.Oy.prototype={
 K(a){var s=this,r=null
-if(A.X(a).w===B.G)return new A.te(8,B.di,s.c,s.d,s.e===!0,B.OO,3,r,B.G8,B.FZ,A.HP(),r,r,3,r)
+if(A.X(a).w===B.G)return new A.te(8,B.di,s.c,s.d,s.e===!0,B.OO,3,r,B.G9,B.FZ,A.HP(),r,r,3,r)
 return new A.vW(s.c,s.d,s.e,r,r,r,B.bq,B.eX,A.HP(),r,r,0,r)}}
 A.vW.prototype={
 au(){var s=null
@@ -59816,7 +59816,7 @@ m=A.Lw(q?B.oy:B.Hd,j,j,j)
 l=q?"Back":"More"
 n=A.b([new A.Y8(m,new A.aup(k),l,n)],t.p)
 B.b.U(n,k.a.c)
-return new A.Ya(q,s,A.aB0(p.avx(a,new A.Y6(o,q,s,n,j)),B.ah,B.G_),r)}}
+return new A.Ya(q,s,A.aB0(p.avx(a,new A.Y6(o,q,s,n,j)),B.ah,B.G0),r)}}
 A.aup.prototype={
 $0(){var s=this.a
 s.W(new A.auo(s))},
@@ -60504,7 +60504,7 @@ a2.e===$&&A.a()
 if(a==null)c=a3
 else c=a
 if(c==null)c=""
-a1=new A.AM(c,new A.aiM(a2,new A.Ym(l,e,B.aN,d,m,b,a0,a3)),B.D,B.G1,B.aA,!0,B.Xj,!0,a3,a2.gaam(),a1,a2.d)
+a1=new A.AM(c,new A.aiM(a2,new A.Ym(l,e,B.aN,d,m,b,a0,a3)),B.D,B.G2,B.aA,!0,B.Xj,!0,a3,a2.gaam(),a1,a2.d)
 return a1}}
 A.aiM.prototype={
 $2(a,b){var s=this.a.a.c
@@ -96748,32 +96748,32 @@ B.aA=new A.aX(1e5)
 B.ca=new A.aX(1e6)
 B.FY=new A.aX(12e4)
 B.FZ=new A.aX(12e5)
+B.G_=new A.aX(12e7)
 B.kd=new A.aX(125e3)
-B.G_=new A.aX(14e4)
-B.G0=new A.aX(15e3)
-B.G1=new A.aX(15e5)
-B.G2=new A.aX(16667)
+B.G0=new A.aX(14e4)
+B.G1=new A.aX(15e3)
+B.G2=new A.aX(15e5)
+B.G3=new A.aX(16667)
 B.dL=new A.aX(167e3)
-B.G3=new A.aX(18e4)
-B.G4=new A.aX(195e3)
+B.G4=new A.aX(18e4)
+B.G5=new A.aX(195e3)
 B.nT=new A.aX(200)
-B.G5=new A.aX(2e4)
+B.G6=new A.aX(2e4)
 B.U=new A.aX(2e5)
 B.ke=new A.aX(2e6)
-B.G6=new A.aX(225e3)
-B.G7=new A.aX(246e3)
-B.G8=new A.aX(25e4)
-B.G9=new A.aX(2961926e3)
+B.G7=new A.aX(225e3)
+B.G8=new A.aX(246e3)
+B.G9=new A.aX(25e4)
+B.Ga=new A.aX(2961926e3)
 B.bq=new A.aX(3e5)
 B.nU=new A.aX(35e4)
 B.nV=new A.aX(375e3)
-B.Ga=new A.aX(4e4)
-B.Gb=new A.aX(45e3)
-B.Gc=new A.aX(45e4)
+B.Gb=new A.aX(4e4)
+B.Gc=new A.aX(45e3)
+B.Gd=new A.aX(45e4)
 B.d0=new A.aX(5e4)
 B.d1=new A.aX(5e5)
 B.eX=new A.aX(6e5)
-B.Gd=new A.aX(6e7)
 B.nW=new A.aX(7e4)
 B.Ge=new A.aX(-38e3)
 B.Gf=new A.a3A(0,"tonalSpot")
