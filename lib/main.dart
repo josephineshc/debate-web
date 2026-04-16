@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'prompt': prompt}),
           )
-          .timeout(const Duration(seconds: 120));
+          .timeout(const Duration(seconds: 300));
       final data = jsonDecode(response.body);
       return data['candidates'][0]['content']['parts'][0]['text'] ?? '';
     } catch (e) {
