@@ -2433,7 +2433,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bool isPersonaEmpty =
         !['Dogmatic', 'Analytical', 'Open-Minded'].contains(_persona);
-    bool cannotStart = isTopicEmpty || isPersonaEmpty;
+
+    bool isReasonEmpty = !_subjectChoices.values.any((v) => v == true);
+
+    bool cannotStart = isTopicEmpty || isPersonaEmpty || isReasonEmpty;
 
     return Drawer(
       width: 420,
