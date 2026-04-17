@@ -44927,9 +44927,10 @@ k=A.la(new A.bc(n,k),new A.apr(q),k.i("l.E"),t.o0)
 n=A.a3(k,A.o(k).i("l.E"))
 B.b.U(j,n)
 j.push(B.cm)
-n=o?B.ie:B.ho
+n=l?B.ie:B.ho
 n=A.a4w(p,p,n,p,p,p,2,p,p,B.j,p,p,p,p,new A.cw(A.cm(12),B.n),p,p,p,p,p)
-j.push(A.i3(A.aC0(A.bC(l?"Choose Settings":"Start Debate",p,p,p,B.Ao,p,p),new A.aps(q),n),55,1/0))
+k=l?p:new A.aps(q)
+j.push(A.i3(A.aC0(A.bC(l?"Choose Settings":"Start Debate",p,p,p,B.Ao,p,p),k,n),55,1/0))
 return new A.Kn(B.jV,420,A.aeu(!0,A.ayD(A.dq(j,B.a7,B.A,B.E),p,B.f_,p),B.av,!0),p)},
 DT(a,b){return A.aNQ(new A.apH(a,b))}}
 A.apK.prototype={
