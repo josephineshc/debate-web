@@ -573,7 +573,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .join("\n");
 
     final prompt = """
-    The crossfire round has ended.
+    You are a $_persona debater.
     ${_getPersonaPrompt()}
     Topic: $_selectedTopic. 
     Your Side: $_oppSide.
@@ -635,23 +635,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //✅ Summary Box Generate
   void _generateAiSummary() async {
-    String crossfire1 = _crossfireMessages
-        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
-        .join("\n");
     String crossfire2 = _crossfireMessages2
         .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
         .join("\n");
 
     final prompt = """
     The crossfire round has ended. 
-    ${_getPersonaPrompt()}
+    You are a $_persona debater.
     Topic: $_selectedTopic. 
     Your Side: $_oppSide. 
     
     Full Debate History So Far:
-    [Constructive - Opponent]:$_aiConstructiveText
-    [Constructive - User]: ${_userConstructiveController.text}
-    [Crossfire 1]: $crossfire1
     [Rebuttal - Opponent]:$_aiRebuttalText
     [Rebuttal - User]: ${_userRebuttalController.text}
     [Crossfire 2]: $crossfire2
@@ -709,29 +703,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   //✅ FinalFocus Box Generate
   void _generateFinalFocusSummary() async {
-    String crossfire1 = _crossfireMessages
-        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
-        .join("\n");
-    String crossfire2 = _crossfireMessages2
-        .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
-        .join("\n");
     String crossfire3 = _crossfireMessages3
         .map((m) => "${m.isUser ? 'User' : 'Opponent'}: ${m.text}")
         .join("\n");
 
     final prompt = """
     The crossfire round has ended. 
-    ${_getPersonaPrompt()}
+    You are a $_persona debater.
     Topic: $_selectedTopic. 
     Your Side: $_oppSide. 
     
     Full Debate History So Far:
-    [Constructive - Opponent]:$_aiConstructiveText
-    [Constructive - User]: ${_userConstructiveController.text}
-    [Crossfire 1]: $crossfire1
-    [Rebuttal - Opponent]:$_aiRebuttalText
-    [Rebuttal - User]: ${_userRebuttalController.text}
-    [Crossfire 2]: $crossfire2
     [Summary - Opponent]:$_aiSummaryText
     [Summary - User]: ${_userSummaryController.text}
     [Crossfire 3]: $crossfire3
@@ -786,8 +768,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _scrollToBottom();
 
-    final chatPrompt =
-        "${_getPersonaPrompt()} $phaseContext Debate Topic: $_selectedTopic. Your Side: $_oppSide. Respond to this argument in 2 sentences: $text";
+    final chatPrompt = "You are a $_persona debater arguing $_oppSide on: $_selectedTopic. $phaseContext Respond in 2 sentences: $text";
     try {
       final text = await _callGemini(chatPrompt);
       setState(() {
