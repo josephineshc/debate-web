@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double _userInitialCertainty = 15;
   double _userResearchCertainty = 15;
   String _oppSide = 'pros';
-  String _persona = 'sympathetic';
+  String _persona = '';
   String _selectedTopic = "None Selected";
   late FocusNode _searchFocusNode;
   bool _isSearchFocused = false;
@@ -2280,7 +2280,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _userInitialCertainty = 15;
       _userResearchCertainty = 15;
       _oppSide = 'pros';
-      _persona = 'sympathetic';
+      _persona = '';
       _selectedTopic = "None Selected";
       _subjectIntroduction = "Select or write a subject to start";
       _isCustomMode = false;
@@ -2428,6 +2428,9 @@ class _MyHomePageState extends State<MyHomePage> {
         _isCustomMode
             ? _customSubjectController.text.trim().isEmpty
             : _searchController.text.trim().isEmpty;
+
+    bool isPersonaEmpty = !['Dogmatic', 'Analytical', 'Open-Minded'].contains(_persona);
+    bool cannotStart = isTopicEmpty || isPersonaEmpty;
 
     return Drawer(
       width: 420,
@@ -2800,7 +2803,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                   },
                   child: Text(
-                    isTopicEmpty ? 'Choose Topic' : 'Start Debate',
+                    cannotStart ? 'Choose Settings' : 'Start Debate',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
