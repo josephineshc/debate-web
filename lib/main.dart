@@ -2157,9 +2157,12 @@ class _MyHomePageState extends State<MyHomePage> {
         "topic": _selectedTopic,
         "oppSide": _oppSide,
         "persona": _persona,
-        "oppCertainty": _oppCertainty,
         "userInitialCertainty": _userInitialCertainty,
         "userResearchCertainty": _userResearchCertainty,
+        "reasonForTopicChoice": _subjectChoices.entries
+          .where((e) => e.value == true)
+          .map((e) => e.key)
+          .toList(),
       },
       "rounds": _debateHistory,
     };
