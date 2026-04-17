@@ -8047,7 +8047,7 @@ _.e=b
 _.f=20
 _.w=_.r=15
 _.x="pros"
-_.y="sympathetic"
+_.y=""
 _.z="None Selected"
 _.Q=$
 _.ch=_.ay=_.ax=_.at=!1
@@ -44889,52 +44889,48 @@ B.b.U(n,m.a6Q())
 B.b.U(o,n)}s=A.b([A.d3(A.ayD(A.dq(o,B.a7,B.A,B.E),m.ok,B.GJ,l),1)],s)
 if(m.dy)s.push(m.a6P())
 return new A.Br(new A.Bm(new A.xg(k,q,0,B.Ev,B.oB,new A.VB(l,l,1/0,56),l),A.dq(s,B.Q,B.A,B.E),p,l),m.e,l)},
-a6T(a){var s,r,q,p,o,n=this,m=null,l=n.at,k=l?B.c.e3(n.bk.a.a).length===0:B.c.e3(n.bl.a.a).length===0,j=A.bC("Topic",m,m,m,B.fO,m,m)
-l=!l
-s=l?B.j:B.cZ
-r=t.y
-q=t.p
-l=A.b([new A.c_(B.eY,j,m),A.dh(A.b([A.d3(A.qJ(n.bl,A.axZ(m,new A.ht(4,A.cm(30),B.n),m,m,m,m,m,m,!0,m,m,m,m,m,m,s,!0,m,m,m,m,m,m,m,m,m,m,m,m,m,m,"Search topics...",m,m,m,m,m,m,m,m,m,!0,!0,!1,m,B.Hr,m,m,m,m,m,m,m,m,m,m,m,m),l,m,m,1,n.ga9L(),m,m,m),1),A.acK(n.at,new A.apo(n),!1,m,r)],q),B.Q,B.A,B.E,0)],q)
-if(!n.at){j=A.cm(10)
-s=A.b([new A.dJ(0,B.dA,B.jS,B.f,4)],t.sq)
-p=n.c
-p.toString
-o=n.d
-l.push(A.cK(m,new A.qO(A.X(p).ao1(new A.uG(new A.be(!0,t.yg),new A.be(6,t.YI),m,m,B.ft,new A.be(B.dF,t.rc),m,m,m,m,m)),A.aE_(A.a8l(o,new A.app(n,a),a.length,B.Gq,m,!1),o,!0),m),B.u,m,m,new A.bX(B.j,m,m,j,s,m,B.X),m,250,B.Gt,m,m,m,m))}l.push(B.bn)
-j=n.at
-s=j?B.j:B.cZ
-l.push(A.dh(A.b([A.d3(A.qJ(n.bk,A.axZ(m,new A.ht(4,A.cm(10),B.n),m,m,m,m,m,m,!0,m,m,m,m,m,m,s,!0,m,m,m,m,m,m,m,m,m,m,m,m,m,m,"Enter your custom topic...",m,m,m,m,m,m,m,m,m,!0,!0,!1,m,m,m,m,m,m,m,m,m,m,m,m,m,m),j,m,m,1,m,new A.apq(n),m,m),1),A.acK(n.at,new A.apt(n),!0,m,r)],q),B.Q,B.A,B.E,0))
-l.push(B.ly)
-l.push(B.cm)
-r=t.N
-l.push(A.dh(A.b([A.d3(new A.c_(B.eY,A.bC("Opponent settings",m,m,m,B.fO,m,m),m),1),A.LE(!1,!0,A.dh(A.b([B.WT,A.acK(n.x,new A.apu(n),"pros",B.mt,r)],q),B.Q,B.A,B.ce,0),m,!0,m,m,m,m,m,m,m,m,new A.apv(n),m,m,m,m,m,m,m),B.m6,A.LE(!1,!0,A.dh(A.b([B.WV,A.acK(n.x,new A.apw(n),"cons",B.mt,r)],q),B.Q,B.A,B.ce,0),m,!0,m,m,m,m,m,m,m,m,new A.apx(n),m,m,m,m,m,m,m)],q),B.Q,B.A,B.E,0))
-l.push(B.Rm)
-q=t.fD
-j=A.a3(new A.a2(A.b(["Dogmatic","Analytical","Open-Minded"],t.s),new A.apy(n),q),q.i("au.E"))
-l.push(new A.Qx(8,j,m))
-l.push(B.ly)
-l.push(B.cm)
-l.push(new A.c_(B.eY,A.bC("User survey",m,m,m,B.fO,m,m),m))
-l.push(A.bC("Degree of certainty",m,m,m,B.Al,m,m))
-l.push(B.fJ)
-l.push(n.DT(n.r,new A.apz(n)))
-l.push(B.iR)
-l.push(A.bC("Degree of certainty after research",m,m,m,B.Al,m,m))
-l.push(B.bn)
-l.push(n.DT(n.w,new A.apA(n)))
-l.push(B.ly)
-l.push(B.cm)
-l.push(new A.c_(B.eY,A.bC("Reason for topic choice",m,m,m,B.fO,m,m),m))
-j=n.bS
-s=A.o(j).i("bc<1>")
-s=A.la(new A.bc(j,s),new A.apr(n),s.i("l.E"),t.o0)
-j=A.a3(s,A.o(s).i("l.E"))
-B.b.U(l,j)
-l.push(B.cm)
-j=k?B.ie:B.ho
-j=A.a4w(m,m,j,m,m,m,2,m,m,B.j,m,m,m,m,new A.cw(A.cm(12),B.n),m,m,m,m,m)
-l.push(A.i3(A.aC0(A.bC(k?"Choose Topic":"Start Debate",m,m,m,B.Ao,m,m),new A.aps(n),j),55,1/0))
-return new A.Kn(B.jV,420,A.aeu(!0,A.ayD(A.dq(l,B.a7,B.A,B.E),m,B.f_,m),B.av,!0),m)},
+a6T(a){var s,r,q=this,p=null,o=q.at?B.c.e3(q.bk.a.a).length===0:B.c.e3(q.bl.a.a).length===0,n=t.s,m=!B.b.q(A.b(["Dogmatic","Analytical","Open-Minded"],n),q.y),l=o||m,k=A.bC("Topic",p,p,p,B.fO,p,p),j=!q.at,i=j?B.j:B.cZ,h=t.y,g=t.p
+j=A.b([new A.c_(B.eY,k,p),A.dh(A.b([A.d3(A.qJ(q.bl,A.axZ(p,new A.ht(4,A.cm(30),B.n),p,p,p,p,p,p,!0,p,p,p,p,p,p,i,!0,p,p,p,p,p,p,p,p,p,p,p,p,p,p,"Search topics...",p,p,p,p,p,p,p,p,p,!0,!0,!1,p,B.Hr,p,p,p,p,p,p,p,p,p,p,p,p),j,p,p,1,q.ga9L(),p,p,p),1),A.acK(q.at,new A.apo(q),!1,p,h)],g),B.Q,B.A,B.E,0)],g)
+if(!q.at){k=A.cm(10)
+i=A.b([new A.dJ(0,B.dA,B.jS,B.f,4)],t.sq)
+s=q.c
+s.toString
+r=q.d
+j.push(A.cK(p,new A.qO(A.X(s).ao1(new A.uG(new A.be(!0,t.yg),new A.be(6,t.YI),p,p,B.ft,new A.be(B.dF,t.rc),p,p,p,p,p)),A.aE_(A.a8l(r,new A.app(q,a),a.length,B.Gq,p,!1),r,!0),p),B.u,p,p,new A.bX(B.j,p,p,k,i,p,B.X),p,250,B.Gt,p,p,p,p))}j.push(B.bn)
+k=q.at
+i=k?B.j:B.cZ
+j.push(A.dh(A.b([A.d3(A.qJ(q.bk,A.axZ(p,new A.ht(4,A.cm(10),B.n),p,p,p,p,p,p,!0,p,p,p,p,p,p,i,!0,p,p,p,p,p,p,p,p,p,p,p,p,p,p,"Enter your custom topic...",p,p,p,p,p,p,p,p,p,!0,!0,!1,p,p,p,p,p,p,p,p,p,p,p,p,p,p),k,p,p,1,p,new A.apq(q),p,p),1),A.acK(q.at,new A.apt(q),!0,p,h)],g),B.Q,B.A,B.E,0))
+j.push(B.ly)
+j.push(B.cm)
+h=t.N
+j.push(A.dh(A.b([A.d3(new A.c_(B.eY,A.bC("Opponent settings",p,p,p,B.fO,p,p),p),1),A.LE(!1,!0,A.dh(A.b([B.WT,A.acK(q.x,new A.apu(q),"pros",B.mt,h)],g),B.Q,B.A,B.ce,0),p,!0,p,p,p,p,p,p,p,p,new A.apv(q),p,p,p,p,p,p,p),B.m6,A.LE(!1,!0,A.dh(A.b([B.WV,A.acK(q.x,new A.apw(q),"cons",B.mt,h)],g),B.Q,B.A,B.ce,0),p,!0,p,p,p,p,p,p,p,p,new A.apx(q),p,p,p,p,p,p,p)],g),B.Q,B.A,B.E,0))
+j.push(B.Rm)
+g=t.fD
+n=A.a3(new A.a2(A.b(["Dogmatic","Analytical","Open-Minded"],n),new A.apy(q),g),g.i("au.E"))
+j.push(new A.Qx(8,n,p))
+j.push(B.ly)
+j.push(B.cm)
+j.push(new A.c_(B.eY,A.bC("User survey",p,p,p,B.fO,p,p),p))
+j.push(A.bC("Degree of certainty",p,p,p,B.Al,p,p))
+j.push(B.fJ)
+j.push(q.DT(q.r,new A.apz(q)))
+j.push(B.iR)
+j.push(A.bC("Degree of certainty after research",p,p,p,B.Al,p,p))
+j.push(B.bn)
+j.push(q.DT(q.w,new A.apA(q)))
+j.push(B.ly)
+j.push(B.cm)
+j.push(new A.c_(B.eY,A.bC("Reason for topic choice",p,p,p,B.fO,p,p),p))
+n=q.bS
+k=A.o(n).i("bc<1>")
+k=A.la(new A.bc(n,k),new A.apr(q),k.i("l.E"),t.o0)
+n=A.a3(k,A.o(k).i("l.E"))
+B.b.U(j,n)
+j.push(B.cm)
+n=o?B.ie:B.ho
+n=A.a4w(p,p,n,p,p,p,2,p,p,B.j,p,p,p,p,new A.cw(A.cm(12),B.n),p,p,p,p,p)
+j.push(A.i3(A.aC0(A.bC(l?"Choose Settings":"Start Debate",p,p,p,B.Ao,p,p),new A.aps(q),n),55,1/0))
+return new A.Kn(B.jV,420,A.aeu(!0,A.ayD(A.dq(j,B.a7,B.A,B.E),p,B.f_,p),B.av,!0),p)},
 DT(a,b){return A.aNQ(new A.apH(a,b))}}
 A.apK.prototype={
 $0(){var s,r=this.b,q=this.a,p=q.bB
@@ -45387,7 +45383,7 @@ s.av=null
 s.f=20
 s.w=s.r=15
 s.x="pros"
-s.y="sympathetic"
+s.y=""
 s.z="None Selected"
 s.cx="Select or write a subject to start"
 s.ax=s.at=!1
