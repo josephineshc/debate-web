@@ -768,7 +768,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     _scrollToBottom();
 
-    final chatPrompt = "You are a $_persona debater arguing $_oppSide on: $_selectedTopic. $phaseContext Respond in 2 sentences: $text";
+    final chatPrompt =
+        "You are a $_persona debater arguing $_oppSide on: $_selectedTopic. $phaseContext Respond in 2 sentences: $text";
     try {
       final text = await _callGemini(chatPrompt);
       setState(() {
@@ -2159,10 +2160,11 @@ class _MyHomePageState extends State<MyHomePage> {
         "persona": _persona,
         "userInitialCertainty": _userInitialCertainty,
         "userResearchCertainty": _userResearchCertainty,
-        "reasonForTopicChoice": _subjectChoices.entries
-          .where((e) => e.value == true)
-          .map((e) => e.key)
-          .toList(),
+        "reasonForTopicChoice":
+            _subjectChoices.entries
+                .where((e) => e.value == true)
+                .map((e) => e.key)
+                .toList(),
       },
       "rounds": _debateHistory,
     };
@@ -2179,9 +2181,9 @@ class _MyHomePageState extends State<MyHomePage> {
     html.Url.revokeObjectUrl(url);
 
     html.window.open(
-    'https://docs.google.com/forms/d/e/1FAIpQLSerBP2wHW9j8F-_sfplFcql_jD4MLRoWX1o2DsdVzJWG7PP9A/viewform',
-    '_blank',
-  );
+      'https://docs.google.com/forms/d/e/1FAIpQLSerBP2wHW9j8F-_sfplFcql_jD4MLRoWX1o2DsdVzJWG7PP9A/viewform',
+      '_blank',
+    );
 
     showDialog(
       context: context,
@@ -2429,7 +2431,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ? _customSubjectController.text.trim().isEmpty
             : _searchController.text.trim().isEmpty;
 
-    bool isPersonaEmpty = !['Dogmatic', 'Analytical', 'Open-Minded'].contains(_persona);
+    bool isPersonaEmpty =
+        !['Dogmatic', 'Analytical', 'Open-Minded'].contains(_persona);
     bool cannotStart = isTopicEmpty || isPersonaEmpty;
 
     return Drawer(
@@ -2778,30 +2781,34 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
-                        isTopicEmpty ? Colors.redAccent : Colors.blue.shade700,
+                        cannotStart ? Colors.redAccent : Colors.blue.shade700,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 2,
                   ),
-                  onPressed: () async {
-                    String finalTopic =
-                        _isCustomMode
-                            ? _customSubjectController.text.trim()
-                            : _searchController.text.trim();
+                  onPressed:
+                      cannotStart
+                          ? null
+                          : () async {
+                            String finalTopic =
+                                _isCustomMode
+                                    ? _customSubjectController.text.trim()
+                                    : _searchController.text.trim();
 
-                    if (finalTopic.isNotEmpty) {
-                      setState(() => _selectedTopic = finalTopic);
-                      Navigator.pop(context);
-                      // await _captureWebScreenshot();
-                      await Future.delayed(const Duration(milliseconds: 300));
-                      _generateIntroduction(finalTopic);
-                      _onStartDebate();
-                    } else {
-                      setState(() {});
-                    }
-                  },
+                            if (finalTopic.isNotEmpty) {
+                              setState(() => _selectedTopic = finalTopic);
+                              Navigator.pop(context);
+                              await Future.delayed(
+                                const Duration(milliseconds: 300),
+                              );
+                              _generateIntroduction(finalTopic);
+                              _onStartDebate();
+                            } else {
+                              setState(() {});
+                            }
+                          },
                   child: Text(
                     cannotStart ? 'Choose Settings' : 'Start Debate',
                     style: const TextStyle(
