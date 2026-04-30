@@ -89,6 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   int _userLetterCount = 0;
   final int _charLimit = 1000;
+  final int _sumLimit = 750;
+  final int _finalLimit = 500;
 
   List<ChatMessage> _crossfireMessages = [];
   List<ChatMessage> _crossfireMessages2 = [];
@@ -650,7 +652,7 @@ class _MyHomePageState extends State<MyHomePage> {
     [Rebuttal - User]: ${_userRebuttalController.text}
     [Crossfire 2]: $crossfire2
     
-    Write a final Summary argument (max 1000 chars) that focuses on defending (or answering) the most important arguments and tells the judge how they should be evaluated.
+    Write a final Summary argument (max 750 chars) that focuses on defending (or answering) the most important arguments and tells the judge how they should be evaluated.
   """;
 
     try {
@@ -718,7 +720,7 @@ class _MyHomePageState extends State<MyHomePage> {
     [Summary - User]: ${_userSummaryController.text}
     [Crossfire 3]: $crossfire3
     
-    This should be in maximum 1000 characters. that focuses the debate on 1-2 arguments. Impact calculus is a must. Write the ballot for the judge.
+    This should be in maximum 500 characters. that focuses the debate on 1-2 arguments. Impact calculus is a must. Write the ballot for the judge.
   """;
 
     try {
@@ -1083,7 +1085,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     controller: _userSummaryController,
                     enabled: !_isSummarySaved,
                     maxLines: null,
-                    maxLength: _charLimit,
+                    maxLength: _sumLimit,
                     style: const TextStyle(fontSize: 12),
                     onChanged:
                         (val) => setState(
@@ -1158,7 +1160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       controller: _userFinalFocusController,
                       enabled: !_isFinalFocusSaved,
                       maxLines: null,
-                      maxLength: _charLimit,
+                      maxLength: _finalLimit,
                       style: const TextStyle(fontSize: 12),
                       onChanged:
                           (val) => setState(
@@ -1424,7 +1426,8 @@ class _MyHomePageState extends State<MyHomePage> {
       final judgeResult = round['judgeResult'];
       if (judgeResult != null) {
         buffer.writeln(
-          'Judge Winner: ${judgeResult['winner']}  Score: ${judgeResult['persuasion_score']}',
+          'Judge Winner: ${judgeResult['winner']}  '
+          // Score: ${judgeResult['persuasion_score']},
         );
       }
     }
@@ -1502,9 +1505,9 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _judgeResult = {
           'winner': normalised['winner']?.toString() ?? 'Unknown',
-          'persuasion_score':
-              (normalised['score'] ?? normalised['persuasion_score'] ?? 50)
-                  as num,
+          // 'persuasion_score':
+          //     (normalised['score'] ?? normalised['persuasion_score'] ?? 50)
+          //         as num,
           'reasoning': {
             'constructive_eval':
                 reasoning['constructive_eval']?.toString() ?? '',
@@ -1525,7 +1528,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildJudgeUI() {
     if (_judgeResult == null) return const SizedBox();
 
-    double score = (_judgeResult!['persuasion_score'] as num).toDouble();
+    // double score = (_judgeResult!['persuasion_score'] as num).toDouble();
     String winner = _judgeResult!['winner'];
 
     return Column(
@@ -1537,30 +1540,30 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         const SizedBox(height: 20),
 
-        Container(
-          height: 60,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(height: 4, color: Colors.grey.shade300),
-              Positioned(
-                left: (score / 100) * MediaQuery.of(context).size.width * 0.7,
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: score > 50 ? Colors.green : Colors.red,
-                    ),
-                    Text(
-                      "${score.toInt()}",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   height: 60,
+        //   child: Stack(
+        //     alignment: Alignment.center,
+        //     children: [
+        //       Container(height: 4, color: Colors.grey.shade300),
+        //       Positioned(
+        //         left: (score / 100) * MediaQuery.of(context).size.width * 0.7,
+        //         child: Column(
+        //           children: [
+        //             Icon(
+        //               Icons.location_on,
+        //               color: score > 50 ? Colors.green : Colors.red,
+        //             ),
+        //             Text(
+        //               "${score.toInt()}",
+        //               style: TextStyle(fontWeight: FontWeight.bold),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
 
         Padding(
           padding: const EdgeInsets.all(16.0),
