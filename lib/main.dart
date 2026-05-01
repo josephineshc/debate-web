@@ -416,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
               ),
               Text(
-                "${charCount ?? 0}/$_charLimit",
+                "${charCount ?? 0}/$maxLimit",
                 style: const TextStyle(fontSize: 10, color: Colors.black54),
               ),
             ],
