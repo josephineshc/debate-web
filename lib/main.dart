@@ -390,6 +390,7 @@ class _MyHomePageState extends State<MyHomePage> {
     bool isLoading = false,
     required Widget content,
     required int charCount,
+    required int maxLimit,
     VoidCallback? onSave,
     required bool isReadOnly,
   }) {
@@ -411,7 +412,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                title,
+                "$charCount/$maxLimit",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
               ),
               Text(
@@ -492,7 +493,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             return;
                           }
 
-                          if (charCount > 0 && charCount <= _charLimit) {
+                          if (charCount > 0 && charCount <= maxLimit) {
                             onSave();
                           }
                         },
@@ -913,6 +914,7 @@ class _MyHomePageState extends State<MyHomePage> {
               isLoading: _isAiGenerating,
               content: Text(_aiConstructiveText ?? ""),
               charCount: (_aiConstructiveText ?? "").length,
+              maxLimit: _charLimit,
               isReadOnly: false,
             ),
           ),
@@ -922,6 +924,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: "Constructive",
               isUser: true,
               isReadOnly: _isCrossfireStarted,
+              maxLimit: _charLimit,
               content: TextField(
                 controller: _userConstructiveController,
                 enabled: !_isCrossfireStarted,
@@ -996,6 +999,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 isLoading: _isAiRebuttalGenerating,
                 content: Text(_aiRebuttalText),
                 charCount: _aiRebuttalText.length,
+                maxLimit: _charLimit,
                 isReadOnly: false,
               ),
             ),
@@ -1005,6 +1009,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 title: "Rebuttal",
                 isUser: true,
                 isReadOnly: _isRebuttalSaved,
+                maxLimit: _charLimit,
                 content: TextField(
                   controller: _userRebuttalController,
                   enabled: !_isRebuttalSaved,
@@ -1072,6 +1077,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   isLoading: _isAiSummaryGenerating,
                   content: Text(_aiSummaryText),
                   charCount: _aiSummaryText.length,
+                  maxLimit: _sumLimit,
                   isReadOnly: false,
                 ),
               ),
@@ -1081,6 +1087,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: "Summary",
                   isUser: true,
                   isReadOnly: _isSummarySaved,
+                  maxLimit: _sumLimit,
                   content: TextField(
                     controller: _userSummaryController,
                     enabled: !_isSummarySaved,
@@ -1147,6 +1154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     isLoading: _isAiFinalFocusGenerating,
                     content: Text(_aiFinalFocusText),
                     charCount: _aiFinalFocusText.length,
+                    maxLimit: _finalLimit,
                     isReadOnly: false,
                   ),
                 ),
@@ -1156,6 +1164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     title: "Final Focus",
                     isUser: true,
                     isReadOnly: _isFinalFocusSaved,
+                    maxLimit: _finalLimit,
                     content: TextField(
                       controller: _userFinalFocusController,
                       enabled: !_isFinalFocusSaved,
